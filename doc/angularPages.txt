@@ -1,0 +1,16 @@
+Routes:
+Groups and computers - Grupper og pcer
+/group/view   view all groups
+/group/new   create a new group
+/group/{id}  edit existing group
+
+Screens - Skjermer
+/screen/view   view all screens
+/screen/new  create a new screen
+/screen/{id} edit existing screen
+
+
+Те саме
+Pictures  - Bilder
+Videos - Videoer
+Presentations - Presentasjoner
