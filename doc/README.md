@@ -49,7 +49,7 @@ allImage: url or  internal parameter
 
 
 1. GROUP API
-GET /api/v1/group/{id}
+GET /api/v1/group/{parent id}
   id=0 the ALL group
   retrieves information about a group
   {
@@ -57,20 +57,20 @@ GET /api/v1/group/{id}
       title: "All"
       groups: [{id, title}],
       computers: [{id,title,url}],
-      possibleGroups:[{id,title}] 
+      allGroups:[{id,title}] 
   }
 POST /api/v1/group/{parent id}
   creates a group
   {
       title: "Work"
-      groups: [{id, title}],
+      groupIds: [id],
       computers: [{id,title,url}] 
   }
 PUT /api/v1/group/{group id}
   updates a group
   {
       title: "Work"
-      groups: [{id, title}],
+      groupIds: [id],
       computers: [{id,title,url}] 
   }
 DELETE /api/v1/group/{group id}
@@ -80,7 +80,7 @@ DELETE /api/v1/group/{group id}
 2. PICTURE API
 GET /picture/name
      load picture
-GET /api/v1/pictures
+GET /api/v1/picture
     [{id,title,url}] get full list of pictures
 POST /api/v1/picture
      {title,file} upload a picture
@@ -91,7 +91,7 @@ DELETE /api/v1/picture/{picture id}
 3. VIDEO API
 GET /video/name
      load video
-GET /api/v1/videos
+GET /api/v1/video
     [{id,title,url}] get full list of videos
 POST /api/v1/video
      {title,file} upload a video
