@@ -1,0 +1,11 @@
+@if (!pool) {
+    <app-loader message="TV PCer side lasting"></app-loader>
+} @else {
+  @for (item of pool; track item.id) {
+       <div>{{ item.name }}</div> 
+       <div>{{ item.url }}</div> 
+      } @empty {
+        Ingen TV pcer ennå 
+    }
+    
+}
