@@ -1,3 +1,5 @@
+import { Media } from "./media";
+
 export interface ScreenText {
     message: string;
     color: string;
@@ -18,3 +20,8 @@ export interface Screen {
     file: string;
 }
   
+export interface ScreenSingle {
+    pool: Screen;
+    picture: Media[];
+    video: Media[];
+}

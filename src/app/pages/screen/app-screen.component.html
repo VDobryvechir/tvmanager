@@ -1,1 +1,16 @@
-Screen PAGE
+@if (!pool) {
+    <app-loader message="Skjerm side lasting"></app-loader>
+} @else {
+    <app-add-button message="Lag en ny skjerm" routing="/screen/new"></app-add-button>
+  @for (item of pool; track item.id) {
+       <app-screen-view 
+        [id]="item.id"
+        [name]="item.name"
+        [mode]="item.mode"
+        [file]="item.file"
+       ></app-screen-view>
+      } @empty {
+       <app-page-message [message]="['Ingen skjermer ennå','','Du kan legge til nye skjermer ved å klikke på plussikonet ovenfor.']"></app-page-message> 
+    }
+    
+}

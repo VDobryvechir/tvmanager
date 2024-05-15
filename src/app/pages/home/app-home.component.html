@@ -1,1 +1,10 @@
-<h1>HOME PAGE</h1>
+@if (!pool) {
+    <app-loader message="Hjem side lasting"></app-loader>
+} @else {
+  @for (item of pool; track item.id) {
+       <div>{{ item.name }}</div> 
+      } @empty {
+        <app-page-message [message]="['Ingen info ennå']"></app-page-message> 
+    }
+    
+}

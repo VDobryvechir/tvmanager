@@ -1,1 +1,11 @@
-picture page
+@if (!pool) {
+    <app-loader message="Bilder side lasting"></app-loader>
+} @else {
+  <app-add-button message="Lag et nytt bild" routing="/picture/new"></app-add-button>
+  @for (item of pool; track item.id) {
+       <div>{{ item.name }}</div> 
+      } @empty {
+        <app-page-message [message]="['Ingen bilder ennå','','Du kan legge til nye bilder ved å klikke på plussikonet ovenfor.']"></app-page-message> 
+    }
+    
+}

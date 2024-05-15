@@ -1,12 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ScreenService } from '../../services/screen.service';
+import { Subscription } from 'rxjs';
+import { Screen } from '../../model/screen';
+import { AppLoaderComponent } from '../../components/loader/loader.component';
+import { PageMessageComponent } from '../../components/page-message/page-message.component';
+import { ScreenViewComponent } from './view/screen-view.component';
+import { AddButtonComponent } from '../../components/add-button/add-button.component';
 
 @Component({
   selector: 'app-screen',
   standalone: true,
-  imports: [],
+  imports: [AppLoaderComponent, 
+            PageMessageComponent, 
+            ScreenViewComponent,
+            AddButtonComponent
+          ],
   templateUrl: './app-screen.component.html',
   styleUrl: './app-screen.component.less'
 })
-export class AppScreenComponent {
-    
+export class AppScreenComponent implements OnInit, OnDestroy {
+  pool: Screen[] | undefined;
+  unsubscribeScreens!: Subscription;
+
+  constructor(private screenService: ScreenService) {
+
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeScreens && this.unsubscribeScreens.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.unsubscribeScreens = this.screenService.getAll().subscribe((pool)=>{
+       this.pool = pool;
+    });
+  }
 }

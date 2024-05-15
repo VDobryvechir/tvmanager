@@ -1,11 +1,12 @@
 @if (!pool) {
     <app-loader message="TV PCer side lasting"></app-loader>
 } @else {
+  <app-add-button message="Lag en ny tv pc" routing="/tvpc/new"></app-add-button>
   @for (item of pool; track item.id) {
        <div>{{ item.name }}</div> 
        <div>{{ item.url }}</div> 
       } @empty {
-        Ingen TV pcer ennå 
+        <app-page-message [message]="['Ingen TV pcer ennå','','Du kan legge til nye skjermer ved å klikke på plussikonet ovenfor.']"></app-page-message> 
     }
     
 }

@@ -1,1 +1,11 @@
-group page
+@if (!pool) {
+    <app-loader message="Grupper side lasting"></app-loader>
+} @else {
+  <app-add-button message="Lag en ny grupp" routing="/group/new"></app-add-button>
+  @for (item of pool; track item.id) {
+       <div>{{ item.name }}</div> 
+      } @empty {
+        <app-page-message [message]="['Ingen grupper ennå','','Du kan legge til nye grupper ved å klikke på plussikonet ovenfor.']"></app-page-message> 
+    }
+    
+}
