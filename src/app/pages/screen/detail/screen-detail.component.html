@@ -1,1 +1,49 @@
-Screen details 
+<mat-tab-group animationDuration="0ms" class="screen-detail-tab">
+    <mat-tab label="Tekst og bilde">
+        <div class="screen-detail-fields"> 
+            
+            <mat-form-field>
+                <mat-label>Velg Bilde</mat-label>
+                <mat-select>
+                  @for (item of picturePool; track item.id) {
+                    <mat-option [value]="item.id">{{item.name}}</mat-option>
+                  }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </mat-tab>
+    <mat-tab label="Avansert tekst">
+        <div class="screen-detail-fields">
+            Advanced HTML Editor will be here soon! 
+        </div>
+    </mat-tab>
+    <mat-tab label="Bare ett bilde">
+        <div class="screen-detail-fields"> 
+            <mat-form-field>
+                <mat-label>Velg Bilde</mat-label>
+                <mat-select>
+                  @for (item of picturePool; track item.id) {
+                    <mat-option [value]="item.id">{{item.name}}</mat-option>
+                  }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </mat-tab>
+    <mat-tab label="Video">
+       <div class="screen-detail-fields"> 
+        <mat-form-field>
+            <mat-label>Velg Video</mat-label>
+            <mat-select>
+              @for (item of videoPool; track item.id) {
+                <mat-option [value]="item.id">{{item.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+    </mat-tab>
+
+</mat-tab-group>
+<div class="screen-detail-footer">
+    <button mat-flat-button color="accent" (click)="save()">Lagre</button>
+    <button mat-stroked-button color="accent" (click)="undo()">Avbryt</button>
+</div>  
