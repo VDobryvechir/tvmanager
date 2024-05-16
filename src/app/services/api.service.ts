@@ -9,7 +9,11 @@ export class ApiService {
 
   serverAddress: string = "http://localhost:2024";
 
-  constructor(protected httpClient: HttpClient) { }
+  constructor(protected httpClient: HttpClient) {
+      if (!window.location.origin.includes(":4200")) {
+           this.serverAddress = "";
+      }        
+  }
 
   finishUrl(url: string): string {
     return this.serverAddress + url; 
