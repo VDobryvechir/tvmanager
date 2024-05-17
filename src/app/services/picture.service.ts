@@ -14,8 +14,23 @@ export class PictureService {
     return this.api.get(this.url);
   }
 
-  post(media: Media): Observable<Media> {
+  getSingle(id: string): Observable<Media> {
+    return this.api.get(this.url + "/" + id);
+  }
+
+  getNew(): Media {
+    return {
+      name: "",
+      file: ""
+    };
+  }
+
+  post(media: Media | FormData): Observable<Media> {
     return this.api.post(this.url, media);
+  }
+
+  put(media: Media | FormData): Observable<Media> {
+    return this.api.put(this.url, media);
   }
 
   deleteItem(id: string): Observable<any> {

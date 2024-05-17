@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AppButtonComponent } from './components/button/button.component';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +20,9 @@ export class AppComponent {
   tvpc = 'tvpc';
   active = this.home;
 
-  constructor(private route: ActivatedRoute,
-    private router: Router 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router, 
   ) {
 
   }

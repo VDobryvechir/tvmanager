@@ -1,11 +1,13 @@
 @if (!pool) {
-    <app-loader message="Bilder side lasting"></app-loader>
+    <app-loader [message]="loaderMessage"></app-loader>
 } @else {
-  <app-add-button message="Lag et nytt bild" routing="/picture/new"></app-add-button>
-  @for (item of pool; track item.id) {
-       <div>{{ item.name }}</div> 
-      } @empty {
-        <app-page-message [message]="['Ingen bilder ennå','','Du kan legge til nye bilder ved å klikke på plussikonet ovenfor.']"></app-page-message> 
-    }
-    
+  <app-add-button [message]="creationMessage" [routing]="'/' + kind + '/new'"></app-add-button>
+  <div class="app-picture-table">
+    @for (item of pool; track item.id) {
+      <picture-view [pool]="item" (refresh)="refresh()" [kind]="kind"></picture-view> 
+  } @empty {
+       <app-page-message [message]="emptyMessage"></app-page-message> 
+  }
+  </div>
+   
 }

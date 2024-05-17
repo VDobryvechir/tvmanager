@@ -1,11 +1,7 @@
-@if (!pool) {
-    <app-loader message="Videoer side lasting"></app-loader>
-} @else {
-  <app-add-button message="Lag en ny video" routing="/video/new"></app-add-button>
-  @for (item of pool; track item.id) {
-       <div>{{ item.name }}</div> 
-      } @empty {
-        <app-page-message [message]="['Ingen videoer ennå','','Du kan legge til nye videoer ved å klikke på plussikonet ovenfor.']"></app-page-message> 
-    }
-    
-}
+<app-picture
+   loaderMessage="Videoer side lasting"
+   kind="picture"
+   creationMessage="Lag en ny video"
+   [emptyMessage]="['Ingen videoer ennå','','Du kan legge til nye videoer ved å klikke på plussikonet ovenfor.']"
+>
+</app-picture>

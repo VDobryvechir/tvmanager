@@ -7,6 +7,7 @@ import {AppScreenComponent} from './pages/screen/app-screen.component';
 import {AppTvpcComponent} from './pages/tvpc/app-tvpc.component';
 import {AppVideoComponent} from './pages/video/app-video.component';
 import {ScreenDetailComponent} from './pages/screen/detail/screen-detail.component';
+import { PictureDetailComponent } from './pages/picture/detail/picture-detail.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -18,5 +19,7 @@ export const routes: Routes = [
     { path: 'tvpc', component: AppTvpcComponent },
     { path: 'video', component: AppVideoComponent },
     { path: 'screen/:id', component: ScreenDetailComponent },
+    { path: 'picture/:id', component: PictureDetailComponent },
+    { path: 'video/:id', component: PictureDetailComponent },
   
 ];

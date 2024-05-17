@@ -43,7 +43,4 @@
     </mat-tab>
 
 </mat-tab-group>
-<div class="screen-detail-footer">
-    <button mat-flat-button color="accent" (click)="save()">Lagre</button>
-    <button mat-stroked-button color="accent" (click)="undo()">Avbryt</button>
-</div>  
+<save-footer cancelRoute="/screen" (save)="save()"></save-footer> 
