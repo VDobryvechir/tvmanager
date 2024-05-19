@@ -1,3 +1,16 @@
 .file-input {
     display: none;
 }
+.file-upload {
+    display: flex;
+    align-items: center;
+    margin-left: 249px;
+  }
+  .file-upload-message {
+    visibility: hidden;
+    margin-left: 10px; /* Відступ від кнопки */
+  }
+
+  .upload-btn:hover + .file-upload-message {
+    visibility: visible;
+  }

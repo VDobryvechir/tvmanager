@@ -14,7 +14,7 @@ import { AddButtonComponent } from '../../components/add-button/add-button.compo
   styleUrl: './app-tvpc.component.less'
 })
 export class AppTvpcComponent implements OnInit, OnDestroy {
-    designTime: boolean = false;
+    designTime: boolean = true;
     pool: Tvpc[] | undefined = this.designTime ? [
        {
            id: "378973287932",

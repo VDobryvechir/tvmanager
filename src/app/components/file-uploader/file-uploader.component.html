@@ -1,12 +1,8 @@
-<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+<input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
 
 <div class="file-upload">
-
-   {{fileName || message || "klikk på bindersen for å laste ned"}}
-
-    <button mat-mini-fab color="primary" class="upload-btn"
-      (click)="fileUpload.click()">
-        <mat-icon>attach_file</mat-icon>
-    </button>
+  <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+  <span class="file-upload-message">{{ fileName || message || "klikk på bindersen for å laste ned" }}</span>
 </div>
