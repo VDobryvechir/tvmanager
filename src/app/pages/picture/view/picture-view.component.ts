@@ -17,6 +17,7 @@ export class PictureViewComponent implements OnDestroy {
   @Input() pool!: Media;
   @Input() kind: string = "picture";
   @Output() refresh: EventEmitter<void> = new EventEmitter();
+  @Input() root: string = '';
 
   unsubscribeQuery!: Subscription;
 

@@ -15,6 +15,10 @@ export class ApiService {
       }        
   }
 
+  getRootUrl(): string {
+    return this.serverAddress;
+  }
+
   finishUrl(url: string): string {
     return this.serverAddress + url; 
   }

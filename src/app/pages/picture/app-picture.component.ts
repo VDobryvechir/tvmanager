@@ -26,7 +26,7 @@ export class AppPictureComponent implements OnInit, OnDestroy{
   @Input() creationMessage = "Lag et nytt bild";
   @Input() emptyMessage: string[] = ['Ingen bilder ennå','','Du kan legge til nye bilder ved å klikke på plussikonet ovenfor.'];
 
-
+  root: string = '';
   pool: Media[] | undefined;
 
   unsubscribeQuery!: Subscription;
@@ -42,6 +42,7 @@ export class AppPictureComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.root = this.pictureService.getRootUrl();
     this.refresh();
   }
 

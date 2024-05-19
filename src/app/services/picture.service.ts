@@ -10,6 +10,10 @@ export class PictureService {
   url = "/api/v1/picture";
   constructor(private api: ApiService) { }
 
+  getRootUrl(): string {
+    return this.api.getRootUrl();
+  }
+
   getAll(): Observable<Media[]> {
     return this.api.get(this.url);
   }
