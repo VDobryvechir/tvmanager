@@ -18,6 +18,13 @@ export class TvpcService {
     return this.api.get(this.url + "/" + id);
   }
 
+  getNew(): Tvpc {
+    return {
+      name: "",
+      url: ""
+    };
+  }
+
   post(tvpc: Tvpc): Observable<Tvpc> {
     return this.api.post(this.url, tvpc);
   }

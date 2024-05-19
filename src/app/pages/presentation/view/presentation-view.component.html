@@ -1,0 +1,26 @@
+<div class="picture-view">
+  <div class="picture-view__bar">
+    <div class="picture-view__bar-name">{{ pool.name }}</div>
+    <div class="picture-view__bar-action">
+      <a routerLink="/{{kind}}/{{pool.id}}">
+        <span title="redigere">
+          <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="mode_edit"></mat-icon>
+        </span>
+      </a>
+      <span (click)="remove()" title="fjerne">
+        <mat-icon aria-hidden="false" aria-label="Remove" fontIcon="delete_forever"></mat-icon>
+      </span>
+    </div>
+  </div>
+  <div class="picture-view__media">
+    @if (pool.file) {
+      @if (kind==="picture") {
+        <img src="{{root + pool.file}}" width="320" />
+      } @else {
+        <video width="320" height="240" controls>
+          <source src="{{root + pool.file}}" />
+        </video>
+      }
+    }
+  </div>
+</div>

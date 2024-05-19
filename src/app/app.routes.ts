@@ -8,6 +8,9 @@ import {AppTvpcComponent} from './pages/tvpc/app-tvpc.component';
 import {AppVideoComponent} from './pages/video/app-video.component';
 import {ScreenDetailComponent} from './pages/screen/detail/screen-detail.component';
 import { PictureDetailComponent } from './pages/picture/detail/picture-detail.component';
+import { TvpcDetailComponent } from './pages/tvpc/detail/tvpc-detail.component';
+import { GroupDetailComponent } from './pages/group/detail/group-detail.component';
+import { PresentationDetailComponent } from './pages/presentation/detail/presentation-detail.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -21,5 +24,8 @@ export const routes: Routes = [
     { path: 'screen/:id', component: ScreenDetailComponent },
     { path: 'picture/:id', component: PictureDetailComponent },
     { path: 'video/:id', component: PictureDetailComponent },
+    { path: 'tvpc/:id', component: TvpcDetailComponent },
+    { path: 'group/:id', component: GroupDetailComponent },
+    { path: 'presentation/:id', component: PresentationDetailComponent },
   
 ];

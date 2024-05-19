@@ -1,5 +1,5 @@
 export interface Tvpc {
-    id: string;
+    id?: string;
     name: string;
     url: string;
 }

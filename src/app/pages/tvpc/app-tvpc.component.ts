@@ -5,30 +5,17 @@ import { PageMessageComponent } from '../../components/page-message/page-message
 import { TvpcService } from '../../services/tvpc.service';
 import { Subscription } from 'rxjs';
 import { AddButtonComponent } from '../../components/add-button/add-button.component';
+import { TvpcViewComponent } from './view/tvpc-view.component';
 
 @Component({
   selector: 'app-tvpc',
   standalone: true,
-  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent],
+  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent, TvpcViewComponent],
   templateUrl: './app-tvpc.component.html',
   styleUrl: './app-tvpc.component.less'
 })
 export class AppTvpcComponent implements OnInit, OnDestroy {
-    designTime: boolean = true;
-    pool: Tvpc[] | undefined = this.designTime ? [
-       {
-           id: "378973287932",
-           name: "Computer at the central plant",
-           url: "DVDOBR\\KaloApoevma"
-       },
-       {
-        id: "3784908934",
-        name: "Computer at the bottom side",
-        url: "DVDOBR\\Danyil"
-       },
-    
-
-    ] : undefined;
+    pool: Tvpc[] | undefined;
 
     unsubscribeQuery!: Subscription;
 
@@ -41,10 +28,14 @@ export class AppTvpcComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-      if (!this.designTime) {
-        this.unsubscribeQuery = this.tvpcService.getAll().subscribe((pool)=>{
-          this.pool = pool;
-        });
-      }
+      this.refresh()
     }
+
+    refresh(): void {
+      this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();
+      this.unsubscribeQuery = this.tvpcService.getAll().subscribe((pool)=>{
+        this.pool = pool;
+      });
+  }
+
 }

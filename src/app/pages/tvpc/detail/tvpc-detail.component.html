@@ -1,0 +1,19 @@
+@if (pool) {
+  <div class="detail-input">
+    <mat-form-field appearance="fill">
+      <mat-label>tv pc navn</mat-label>
+      <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="detail-input">
+    <mat-form-field appearance="fill">
+      <mat-label>pc url</mat-label>
+      <input matInput placeholder="beskrivelse" [(ngModel)]="pool.url">
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    </mat-form-field>
+  </div>
+  <save-footer cancelRoute="/tvpc" (save)="save()"></save-footer> 
+} @else {
+  <app-loader message="Side lasting"></app-loader>
+}

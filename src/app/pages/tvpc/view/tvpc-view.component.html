@@ -1,0 +1,18 @@
+<div class="tvpc-view">
+  <div class="tvpc-view__bar">
+    <div class="tvpc-view__bar-name">
+      <div>{{ pool.name }}</div>
+      <div>{{ pool.url }}</div>
+    </div>
+    <div class="tvpc-view__bar-action">
+      <a routerLink="/tvpc/{{pool.id}}">
+        <span title="redigere">
+          <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="mode_edit"></mat-icon>
+        </span>
+      </a>
+      <span (click)="remove()" title="fjerne">
+        <mat-icon aria-hidden="false" aria-label="Remove" fontIcon="delete_forever"></mat-icon>
+      </span>
+    </div>
+  </div>
+</div>
