@@ -1,15 +1,28 @@
 @if (pool) {
-  <div class="bildenavn">
+  <div class="detail-main">
     <mat-form-field appearance="fill">
-      <mat-label>{{ nameTitle }}</mat-label>
+      <mat-label>gruppenavn</mat-label>
       <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
       <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
     </mat-form-field>
   </div>
-  <div>
-    <app-file-uploader (update)="updateFile($event)" [kind]="kind" [message]="pool.file || ''"></app-file-uploader>
+  <h3>Tv pcer som inngår i denne gruppen (for å fjerne, klikk bare på dem)</h3>
+  <div class="group-pc-list">
+    @for(pc of pool.tvpcIncluded; track pc.id) {
+      <div class="group-pc-item" (click)="removePc(pc.id)">{{ pc.name }}</div>
+    } @empty {
+      Ingen pc i denne gruppen
+    }
   </div>
-  <save-footer [cancelRoute]="'/' + kind" (save)="save()"></save-footer> 
+  <h3>Du kan legge til følgende tv pcer ved å klikke på dem</h3>
+  <div class="group-pc-list">
+    @for(pc of pool.tvpcExcluded; track pc.id) {
+      <div class="group-pc-item" (click)="joinPc(pc.id)">{{ pc.name }}</div>
+    } @empty {
+      Ikke mer tilgjengelig tvpc
+    }
+  </div>
+  <save-footer cancelRoute="/group" (save)="save()"></save-footer> 
 } @else {
   <app-loader message="Side lasting"></app-loader>
 }

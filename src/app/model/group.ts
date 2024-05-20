@@ -4,6 +4,9 @@ export interface Group {
     id?: string;
     name: string;
     tvpc?: string[];
+    tvpcIncluded?: Tvpc[];
+    tvpcExcluded?: Tvpc[];
+    tvpcInfo?: string;
 }
 
 export interface GroupPool {

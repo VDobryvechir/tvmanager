@@ -5,45 +5,37 @@ import { PageMessageComponent } from '../../components/page-message/page-message
 import { GroupService } from '../../services/group.service';
 import { Subscription } from 'rxjs';
 import { AddButtonComponent } from '../../components/add-button/add-button.component';
+import { GroupViewComponent } from './view/group-view.component';
 
 @Component({
   selector: 'app-group',
   standalone: true,
-  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent],
+  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent, GroupViewComponent],
   templateUrl: './app-group.component.html',
   styleUrl: './app-group.component.less'
 })
-export class AppGroupComponent implements OnInit, OnDestroy{
-  designTime: boolean = false;
-  pool: Group[] | undefined = this.designTime ? [
-     {
-         id: "378973287932",
-         name: "Gruppe at the central plant",
-     },
-     {
-      id: "3784908934",
-      name: "Gruppe at the bottom side",
-     },
-  
+export class AppGroupComponent implements OnInit, OnDestroy {
+    pool: Group[] | undefined;
 
-  ] : undefined;
+    unsubscribeQuery!: Subscription;
 
-  unsubscribeQuery!: Subscription;
+    constructor(private groupService: GroupService) {
 
-  constructor(private groupService: GroupService) {
-
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    if (!this.designTime) {
-      this.unsubscribeQuery = this.groupService.getAll().subscribe((pool)=>{
-        this.pool = pool.pool;
-      });
     }
+
+    ngOnDestroy(): void {
+      this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();
+    }
+
+    ngOnInit(): void {
+      this.refresh();
+    }
+
+    refresh(): void {
+      this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();
+      this.unsubscribeQuery = this.groupService.getAllTransformed().subscribe((pool)=>{
+        this.pool = pool;
+      });
   }
-  
+
 }

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Media } from '../../../model/media';
-import { PictureService } from '../../../services/picture.service';
+import { Group } from '../../../model/group';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -9,9 +8,8 @@ import { AppLoaderComponent } from '../../../components/loader/loader.component'
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SaveFooterComponent } from '../../../components/save-footer/save-footer.component';
-import { FileUploaderComponent } from '../../../components/file-uploader/file-uploader.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VideoService } from '../../../services/video.service';
+import { GroupService } from '../../../services/group.service';
 
 @Component({
   selector: 'group-detail',
@@ -22,7 +20,6 @@ import { VideoService } from '../../../services/video.service';
     MatFormFieldModule, 
     AppLoaderComponent,
     MatButtonModule,
-    FileUploaderComponent,
     FormsModule,
     SaveFooterComponent,
   ],
@@ -30,14 +27,10 @@ import { VideoService } from '../../../services/video.service';
   styleUrl: './group-detail.component.less'
 })
 export class GroupDetailComponent implements OnInit, OnDestroy{
-  pool: Media | undefined;
-  kind: string = "picture";
-  formData: FormData | undefined;
+  pool: Group | undefined;
   unsubscribeQuery!: Subscription;
-  nameTitle: string = "";
-
-  constructor(private pictureService: PictureService,
-    private videoService: VideoService,
+  
+  constructor(private groupService: GroupService,
     private route: ActivatedRoute,
     private router: Router, 
   ) {
@@ -45,33 +38,20 @@ export class GroupDetailComponent implements OnInit, OnDestroy{
   }
 
   save(): void {
-    if (!this.pool || !this.pool.name || (!this.pool.file && !this.formData)) {
+    if (!this.pool || !this.pool.name) {
       return;
     }
-    let body: Media | FormData = this.pool;
-    if (this.formData) {
-      if (this.pool?.id) {
-        this.formData.append("id", this.pool.id);
-      }
-      this.formData.append("name", this.pool.name);
-      body = this.formData;
-    }
-    const api$ = this.pool.id ?
-     (this.kind === "picture" ? this.pictureService.put(body) : this.videoService.put(body)): 
-     (this.kind === "picture" ?this.pictureService.post(body) : this.videoService.post(body));
+    let body: Group = {
+      id: this.pool.id,
+      name: this.pool.name,
+      tvpc: this.groupService.convertOwnToIdList(this.pool.tvpcIncluded || []),
+    };
+    const api$ = body.id ? this.groupService.put(body) : this.groupService.post(body);
     this.unsubscribeQuery = api$.subscribe(()=>{
-      this.router.navigate(["/" + this.kind], { relativeTo: this.route });
+      this.router.navigate(["/group" ], { relativeTo: this.route });
     });
 
   }
-
-  updateFile(file: File): void {
-    if (file.name && !this.pool?.name) {
-      this.pool!.name = file.name; 
-    }
-    this.formData = new FormData();
-    this.formData.append("file", file);
-  } 
 
   ngOnDestroy(): void {
     this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();
@@ -79,19 +59,43 @@ export class GroupDetailComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.kind = window.location.href.includes("/picture/") ? "picture" : "video";
-    this.nameTitle = this.kind === "picture" ? "Bildenavn" : "Videonavn";
-
     if (!id) {
       return;
     }
-    if (id === 'new') {
-      this.pool = this.pictureService.getNew();
-    } else {
-      const api$ = this.kind === "picture" ? this.pictureService.getSingle(id) : this.videoService.getSingle(id);
-      this.unsubscribeQuery = api$.subscribe((pool)=>{
+    const api$ = id === 'new' ? this.groupService.getNew() : this.groupService.getSingleTranformed(id);
+    this.unsubscribeQuery = api$.subscribe((pool)=>{
         this.pool = pool;
-      });
-    } 
+    });
+ }
+ 
+ joinPc(id: string | undefined): void {
+  if (!id || !this.pool || !this.pool.tvpcExcluded || !this.pool.tvpcIncluded) {
+    return;
   }
+  const itemIndex = this.pool.tvpcExcluded.findIndex((item)=> item.id===id);
+  if (itemIndex<0) {
+      return;
+  }       
+  const item = this.pool.tvpcExcluded[itemIndex];
+  if (item) {
+      this.pool.tvpcIncluded.push(item);
+  }
+  this.pool.tvpcExcluded.splice(itemIndex, 1);
+ }
+
+ removePc(id: string | undefined): void {
+  if (!id || !this.pool || !this.pool.tvpcExcluded || !this.pool.tvpcIncluded) {
+    return;
+  }
+  const itemIndex = this.pool.tvpcIncluded.findIndex((item)=> item.id===id);
+  if (itemIndex<0) {
+      return;
+  }       
+  const item = this.pool.tvpcIncluded[itemIndex];
+  if (item) {
+      this.pool.tvpcExcluded.push(item);
+  }
+  this.pool.tvpcIncluded.splice(itemIndex, 1);
+ }
+
 }
