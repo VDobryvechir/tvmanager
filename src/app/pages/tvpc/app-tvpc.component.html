@@ -2,7 +2,7 @@
     <app-loader message="TV PCer side lasting"></app-loader>
 } @else {
   <app-add-button message="Lag en ny tv pc" routing="/tvpc/new"></app-add-button>
-  <div class="app-picture-table">
+  <div class="app-tvpc-table">
   @for (item of pool; track item.id) {
     <tvpc-view [pool]="item" (refresh)="refresh()"></tvpc-view> 
       } @empty {

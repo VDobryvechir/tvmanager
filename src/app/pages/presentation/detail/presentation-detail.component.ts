@@ -13,7 +13,7 @@ import { PresentationService } from '../../../services/presentation.service';
 import { Group } from '../../../model/group';
 import { Screen } from '../../../model/screen';
 import { ScreenViewComponent } from '../../screen/view/screen-view.component';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'presentation-detail',
@@ -119,6 +119,9 @@ export class PresentationDetailComponent implements OnInit, OnDestroy{
       return;
   }       
   const item = this.pool.screenExcluded[itemIndex];
+  if (!item.duration || item.duration<0) {
+    item.duration = 10;
+  }
   if (item) {
       this.pool.screenIncluded.push(item);
   }
