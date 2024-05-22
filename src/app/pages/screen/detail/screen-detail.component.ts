@@ -112,7 +112,6 @@ export class ScreenDetailComponent implements OnInit {
     if (!this.pool || !this.pool.name) {
       return;
     }
-    await this.fullUpdate();
     let body = this.pool;
     const api$ = this.pool.id ? this.screenService.put(body) : this.screenService.post(body);
     api$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(()=>{

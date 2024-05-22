@@ -1,6 +1,7 @@
 import { Screen, ScreenText } from "../model/screen";
 import { Media } from "../model/media";
 import SvgConverter from "./svg-converter";
+import CanvasUtils from "./canvas-utils";
 
 export default class ScreenUtils {
 
@@ -17,6 +18,8 @@ export default class ScreenUtils {
     public static SCREEN_RESOLUTION_HEIGHT = 900;
     public static SCREEN_RESOLUTION_WIDTH = 1600;
 
+    public static singleImageId = "ScreenUtilsSingleImageId";
+
     static root = "";
 
     static setRoot(root:string): void {
@@ -32,7 +35,7 @@ export default class ScreenUtils {
         if (!screen.pictureUrl) {
             return "";
         }
-        return `<img src='${ScreenUtils.root}${screen.pictureUrl}' height='100%' />`;
+        return `<img src='${ScreenUtils.root}${screen.pictureUrl}' height='100%' id='${ScreenUtils.singleImageId}' />`;
     } 
 
     static generateTextModeTextPart(part: ScreenText): string {
@@ -123,7 +126,11 @@ export default class ScreenUtils {
         let subNode = node.children[0] as HTMLElement;
         const res = SvgConverter.toPng(subNode, (dataUrl: string) => {
             screen.file = dataUrl;
-            // node.style.display = "none";
+            const imgNode = document.getElementById(ScreenUtils.singleImageId);
+            if (imgNode) {
+                screen.file = CanvasUtils.fixImagePicture(dataUrl, imgNode, node);
+            }
+            node.style.display = "none";
         });
         return res as Promise<void>;
      }
