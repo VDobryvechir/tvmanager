@@ -91,5 +91,18 @@ export class ScreenDetailComponent implements OnInit {
       this.router.navigate(["/screen"], { relativeTo: this.route });
     });
   }
-  
+
+  addTextBlock(): void {
+    if (!this.pool) {
+      return;
+    }
+    if (!this.pool.text) {
+      this.pool.text = [];
+    }
+    this.pool.text.push({
+      message: "",
+      color: "#ffffff",
+      fontSize: "20",
+    });
+  }
 }

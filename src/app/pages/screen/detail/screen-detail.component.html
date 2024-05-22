@@ -4,9 +4,6 @@
       <mat-label>skjerm navn</mat-label>
       <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
     </mat-form-field>
-  </div>
-
-  <div class="screen-detail-input">
     <mat-form-field appearance="fill">
       <mat-label>bakgrunnsfarge</mat-label>
       <input matInput placeholder="beskrivelse" [(ngModel)]="pool.backgroundColor">
@@ -37,7 +34,13 @@
   <mat-tab-group animationDuration="0ms" class="screen-detail-tab" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Tekst og bilde">
         <div class="screen-detail-fields"> 
-            
+          <div class="screen-detail-input">  
+            <div class="add-button-outer" (click)="addTextBlock()">
+              <span class="add-button-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+                Legg til tekst
+              </span>
+            </div>
             <mat-form-field>
                 <mat-label>Velg Bilde</mat-label>
                 <mat-select>
@@ -46,6 +49,29 @@
                   }
                 </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Bildhöhe in %</mat-label>
+              <input type="number" matInput placeholder="70" [(ngModel)]="pool.pictureHeight" />
+            </mat-form-field>
+          </div>  
+          <div>
+            @for(item of pool.text; track item) {
+              <div class="screen-detail-input">
+                <mat-form-field appearance="fill">
+                  <mat-label>Tekst</mat-label>
+                  <input matInput placeholder="" [(ngModel)]="item.message" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>tekstfarge</mat-label>
+                  <input matInput placeholder="#ffffff" [(ngModel)]="item.color" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>skriftstørrelse i px</mat-label>
+                  <input type="number" matInput placeholder="20" [(ngModel)]="item.fontSize" />
+                </mat-form-field>
+              </div>
+            }
+          </div>
         </div>
     </mat-tab>
     <mat-tab label="Avansert tekst">

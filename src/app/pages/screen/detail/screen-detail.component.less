@@ -23,6 +23,11 @@
 
 .screen-detail-input {
     padding: 5px 20px;
+    display: flex;
+
+    & mat-form-field {
+        margin: 0 20px 15px 0;
+    }
 }
 
 .screen-detail-padding {
@@ -34,4 +39,33 @@
     & mat-form-field {
         margin: 0px 20px 0px 10px;
     }
+}
+
+.add-button-outer {
+    border: 2px solid #24b4fb;
+    background-color: #24b4fb;
+    border-radius: 9px;
+    transition: all ease-in-out 0.2s;
+    font-size: 16px;
+    margin: 0px 20px 0px 10px;
+    width: 195px;
+    height: 54px!important;
+    max-height: 54px;
+    overflow: hidden!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #0071e2;
+    }
+}
+
+.add-button-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
 }
