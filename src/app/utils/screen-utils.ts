@@ -33,7 +33,7 @@ export default class ScreenUtils {
         if (!part || !part.message) {
             return "";
         }
-        const pre = `<div style="color:${part.color};font-size:${part.fontSize}px">`;
+        const pre = `<div style='color:${part.color};font-size:${part.fontSize}px;text-align:center;padding:20px'>`;
         const post = `</div>`;
         return pre + part.message + post;
     }
@@ -54,7 +54,7 @@ export default class ScreenUtils {
         if (p<=0) {
             p = 1;
         }
-        const pre = `<div style="height:${p}"%;overflow:hidden;">`;
+        const pre = `<div style='height:${p}"%;overflow:hidden;'>`;
         const post = `</div>`;
         return pre + res + post;
     }
@@ -64,7 +64,7 @@ export default class ScreenUtils {
         if (!screen.text || !screen.text.length || !picture) {
             return picture;
         }
-        const pre = `<div style="height:${screen.pictureHeight}%;overflow:hidden">`;
+        const pre = `<div style='height:${screen.pictureHeight}%;overflow:hidden'>`;
         const post = `</div>`;
         return pre + picture + post;
     }
@@ -82,10 +82,10 @@ export default class ScreenUtils {
 
     static recalculateHtmlPool(screen: Screen): void {
         if (screen.mode === this.SCREEN_MODE_VIDEO) {
-            screen.htmlPool=`<video width="100%" height="100%" controls><source src="${ScreenUtils.root}${screen.videoUrl}" /></video>`;
+            screen.htmlPool=`<video width='100%' height='100%' controls><source src='${ScreenUtils.root}${screen.videoUrl}' /></video>`;
             return;
         }
-        const pre = `<div style="height:${this.SCREEN_RESOLUTION_HEIGHT}px;background-color:${screen.backgroundColor};padding:${screen.paddingTop}px ${screen.paddingRight}px ${screen.paddingBottom}px ${screen.paddingLeft}">`;
+        const pre = `<div style='height:${this.SCREEN_RESOLUTION_HEIGHT}px;background-color:${screen.backgroundColor};padding:${screen.paddingTop}px ${screen.paddingRight}px ${screen.paddingBottom}px ${screen.paddingLeft}px'>`;
         const post = `</div>`;
         screen.htmlPool = pre + screen.textPool + post;
     }

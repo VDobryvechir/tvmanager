@@ -102,7 +102,7 @@ export class ScreenDetailComponent implements OnInit {
     this.pool.text.push({
       message: "",
       color: "#ffffff",
-      fontSize: "20",
+      fontSize: "60",
     });
   }
 }
