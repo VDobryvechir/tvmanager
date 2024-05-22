@@ -12,4 +12,8 @@ export type StringMap = {
     [key: string]: string;
 };
 
+export type AnyMap = {
+    [key: string]: any;
+};
+
  

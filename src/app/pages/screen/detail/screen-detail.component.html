@@ -1,4 +1,40 @@
-<mat-tab-group animationDuration="0ms" class="screen-detail-tab">
+@if (pool) {
+  <div class="screen-detail-input">
+    <mat-form-field appearance="fill">
+      <mat-label>skjerm navn</mat-label>
+      <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
+    </mat-form-field>
+  </div>
+
+  <div class="screen-detail-input">
+    <mat-form-field appearance="fill">
+      <mat-label>bakgrunnsfarge</mat-label>
+      <input matInput placeholder="beskrivelse" [(ngModel)]="pool.backgroundColor">
+    </mat-form-field>
+  </div>
+
+  <div class="screen-detail-padding">
+    <mat-form-field appearance="fill">
+      <mat-label>polstring til venstre</mat-label>
+      <input matInput placeholder="0" [(ngModel)]="pool.paddingLeft">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>polstring på toppen</mat-label>
+      <input matInput placeholder="0" [(ngModel)]="pool.paddingTop">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>polstring til høyre</mat-label>
+      <input matInput placeholder="0" [(ngModel)]="pool.paddingRight">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>polstring i bunnen</mat-label>
+      <input matInput placeholder="0" [(ngModel)]="pool.paddingBottom">
+    </mat-form-field>
+  </div>
+
+
+
+  <mat-tab-group animationDuration="0ms" class="screen-detail-tab" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Tekst og bilde">
         <div class="screen-detail-fields"> 
             
@@ -14,7 +50,7 @@
     </mat-tab>
     <mat-tab label="Avansert tekst">
         <div class="screen-detail-fields">
-            Advanced HTML Editor will be here soon! 
+            <textarea [(ngModel)]="pool.textPool" class="screen-detail-textarea"></textarea>
         </div>
     </mat-tab>
     <mat-tab label="Bare ett bilde">
@@ -33,7 +69,7 @@
        <div class="screen-detail-fields"> 
         <mat-form-field>
             <mat-label>Velg Video</mat-label>
-            <mat-select>
+            <mat-select [formControl]="video">
               @for (item of videoPool; track item.id) {
                 <mat-option [value]="item.id">{{item.name}}</mat-option>
               }
@@ -43,4 +79,17 @@
     </mat-tab>
 
 </mat-tab-group>
-<save-footer cancelRoute="/screen" (save)="save()"></save-footer> 
+<save-footer cancelRoute="/screen" (save)="save()"></save-footer>
+@if (pool.file) {
+  <div class="screen-detail-preview">
+    <div class="screen-detail-preview__message">Forhåndsvisning</div>
+    @if (pool.mode === "video") {
+      <video width="320" height="240" controls>
+        <source src="{{ root }}{{pool.file}}" />
+      </video>
+    } @else {
+      <img src="{{ pool.file }}" width="320" />
+    }
+  </div>
+  }
+}

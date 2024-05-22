@@ -1,12 +1,12 @@
 @if (!pool) {
-    <app-loader message="Presentasjoner side lasting"></app-loader>
+  <app-loader message="Presentasjoner side lasting"></app-loader>
 } @else {
-  <app-add-button message="Lag en ny presentasjon" routing="/tvpc/new"></app-add-button>
-  @for (item of pool; track item.id) {
-       <div>{{ item.name }}</div> 
-       <div>{{ item.version }}</div> 
-      } @empty {
-        <app-page-message [message]="['Ingen presentasjoner ennå','','Du kan legge til nye presentasjoner ved å klikke på plussikonet ovenfor.']"></app-page-message> 
-    }
-    
+<app-add-button message="Lag en ny presentasjon" routing="/presentation/new"></app-add-button>
+<div class="app-presentation-list">
+@for (item of pool; track item.id) {
+  <presentation-view [pool]="item" (refresh)="refresh()"></presentation-view>
+    } @empty {
+      <app-page-message [message]="['Ingen presentasjoner ennå','','Du kan legge til nye presentasjoner ved å klikke på plussikonet ovenfor.']"></app-page-message> 
+  }
+</div>
 }

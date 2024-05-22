@@ -21,9 +21,10 @@ import { AddButtonComponent } from '../../components/add-button/add-button.compo
 export class AppScreenComponent implements OnInit, OnDestroy {
   pool: Screen[] | undefined;
   unsubscribeScreens!: Subscription;
+  root: string;
 
   constructor(private screenService: ScreenService) {
-
+    this.root = this.screenService.getRoot();
   }
 
   ngOnDestroy(): void {
@@ -31,6 +32,11 @@ export class AppScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.refresh();
+  }
+
+  refresh(): void {
+    this.unsubscribeScreens && this.unsubscribeScreens.unsubscribe();
     this.unsubscribeScreens = this.screenService.getAll().subscribe((pool)=>{
        this.pool = pool;
     });

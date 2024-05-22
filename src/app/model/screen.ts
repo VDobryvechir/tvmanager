@@ -8,7 +8,7 @@ export interface ScreenText {
 }
 
 export interface Screen {
-    id: string;
+    id?: string;
     name: string;
     picture: string;
     backgroundColor: string;
@@ -16,8 +16,18 @@ export interface Screen {
     pictureHeight: number;
     text: ScreenText[];
     textPool: string;
+    htmlPool: string;
     mode: string;
+    paddingLeft: number;
+    paddingRight: number;
+    paddingTop: number;
+    paddingBottom: number;
     file: string;
+
+    // for frontend internal use 
+    videoUrl?: string;
+    pictureUrl?: string;
+    duration?: number;
 }
   
 export interface ScreenSingle {

@@ -1,10 +1,9 @@
 import { Component, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
-import { Media } from '../../../model/media';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { PictureService } from '../../../services/picture.service';
-import { VideoService } from '../../../services/video.service';
+import { PresentationService } from '../../../services/presentation.service';
 import { Subscription } from 'rxjs';
+import { Presentation } from '../../../model/presentation';
 
 @Component({
   selector: 'presentation-view',
@@ -14,16 +13,13 @@ import { Subscription } from 'rxjs';
   styleUrl: './presentation-view.component.less'
 })
 export class PresentationViewComponent implements OnDestroy {
-  @Input() pool!: Media;
-  @Input() kind: string = "picture";
+  @Input() pool!: Presentation;
   @Output() refresh: EventEmitter<void> = new EventEmitter();
   @Input() root: string = '';
 
   unsubscribeQuery!: Subscription;
 
-  constructor(private pictureService: PictureService,
-              private videoService: VideoService,
-  ) {
+  constructor(private presentationService: PresentationService) {
 
   }
 
@@ -35,8 +31,8 @@ export class PresentationViewComponent implements OnDestroy {
     if (!this.pool || !this.pool.id) {
       return;
     }
-    const api = this.kind === "picture" ? this.pictureService.deleteItem(this.pool.id) : this.videoService.deleteItem(this.pool.id);
-    this.unsubscribeQuery = api.subscribe(()=>{
+    const api$ =  this.presentationService.deleteItem(this.pool.id);
+    this.unsubscribeQuery = api$.subscribe(()=>{
       this.refresh.emit();
     });
 

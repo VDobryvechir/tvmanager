@@ -1,5 +1,42 @@
-@if (name) {
-    <div>
-        {{name}}
-    </div>
+@if (pool) {
+    <div class="screen-view">
+        <div class="screen-view__bar">
+          <div class="screen-view__bar-name">
+            <div>{{ pool.name }}</div>
+            @if (kind === "duration") {
+              <div>
+                <span>Varighet i sekunder</span>
+                <span>
+                  <input type="number" [(ngModel)]="pool.duration" (change)="sendUpDuration()" />
+                </span>
+              </div>
+            }
+          </div>
+          @if (kind!=="static") {
+            <div class="screen-view__bar-action">
+              @if (kind==="edit_delete") {
+                <a routerLink="/screen/{{pool.id}}">
+                  <span title="redigere">
+                    <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="mode_edit"></mat-icon>
+                  </span>
+                </a>
+              }
+              <span (click)="remove()" title="fjerne">
+                <mat-icon aria-hidden="false" aria-label="Remove" fontIcon="delete_forever"></mat-icon>
+              </span>
+            </div>
+          }
+        </div>
+        <div class="screen-view__media">
+          @if (pool.file) {
+            @if (pool.mode!=="video") {
+              <img src="{{root + pool.file}}" width="320" />
+            } @else {
+              <video width="320" height="240" controls>
+                <source src="{{root + pool.file}}" />
+              </video>
+            }
+          }
+        </div>
+      </div>
 }

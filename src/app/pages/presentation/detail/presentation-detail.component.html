@@ -1,15 +1,51 @@
 @if (pool) {
-  <div class="bildenavn">
+  <div class="detail-main">
     <mat-form-field appearance="fill">
-      <mat-label>{{ nameTitle }}</mat-label>
+      <mat-label>presentasjonnavn</mat-label>
       <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
       <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
     </mat-form-field>
   </div>
-  <div>
-    <app-file-uploader (update)="updateFile($event)" [kind]="kind" [message]="pool.file || ''"></app-file-uploader>
+  <div class="detail-main">
+    <mat-form-field appearance="fill">
+      <mat-label>Velg tv pc gruppe</mat-label>
+      <mat-select [(ngModel)]="pool.group">
+        @for (item of group; track item.id) {
+          <mat-option [value]="item.id">{{item.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   </div>
-  <save-footer [cancelRoute]="'/' + kind" (save)="save()"></save-footer> 
+  <h3>Skjermer som inngår i denne presentasjonen (for å fjerne, klikk bare på dem)</h3>
+  <div class="presentation-pc-list">
+    @for(pc of pool.screenIncluded; track pc.id) {
+      <div class="presentation-pc-item" >
+        <app-screen-view 
+        [pool]="pc"
+        [root]="root"
+        kind="duration"
+        (refresh)="setDurationOrRemove($event)"
+     ></app-screen-view>
+      </div>
+    } @empty {
+      Ingen skjerm i denne presentasjonen
+    }
+  </div>
+  <h3>Du kan legge til følgende skjermer ved å klikke på dem</h3>
+  <div class="presentation-pc-list">
+    @for(pc of pool.screenExcluded; track pc.id) {
+      <div class="presentation-pc-item" (click)="joinPc(pc.id)">
+         <app-screen-view 
+            [pool]="pc"
+            [root]="root"
+            kind="static"
+         ></app-screen-view>
+      </div>
+    } @empty {
+      Ikke mer tilgjengelig skjerm
+    }
+  </div>
+  <save-footer cancelRoute="/presentation" (save)="save()"></save-footer> 
 } @else {
   <app-loader message="Side lasting"></app-loader>
 }
