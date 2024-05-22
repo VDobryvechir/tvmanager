@@ -4,7 +4,7 @@ export interface ScreenText {
     message: string;
     color: string;
     fontSize: string;
-   
+    gap: string;
 }
 
 export interface Screen {

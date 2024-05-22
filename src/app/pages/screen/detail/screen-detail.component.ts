@@ -39,8 +39,10 @@ export class ScreenDetailComponent implements OnInit {
   picturePool: Media[] = [];
   root: string;
   video = new FormControl('',[]);
+  picture = new FormControl('',[]);
   destroyRef = inject(DestroyRef);
-  
+  modeIndex = 0;
+
   constructor(private screenService: ScreenService,
     private route: ActivatedRoute,
     private router: Router, 
@@ -59,6 +61,15 @@ export class ScreenDetailComponent implements OnInit {
       this.pool = info.pool;
       this.picturePool = info.picture;
       this.videoPool = info.video;
+      this.modeIndex = ScreenUtils.getModeIndex(info.pool.mode);
+      if (this.pool.video) {
+        this.video.setValue(this.pool.video);
+      }
+      if (this.pool.picture) {
+        this.picture.setValue(this.pool.picture);
+      }
+      ScreenUtils.adjustAllParameters(info.pool, info.video, info.picture);
+      this.fullUpdate();
     });
     this.video.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -67,15 +78,33 @@ export class ScreenDetailComponent implements OnInit {
         this.pool.video = this.video.value;
         ScreenUtils.adjustVideoUrl(this.pool, this.videoPool);
       }
+    });
+    this.picture.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(()=>{
+      window.console.log('picture ', this.picture.value, this.pool);
+      if (this.picture.value && this.pool) {
+        this.pool.picture = this.picture.value;
+        ScreenUtils.adjustPictureUrl(this.pool, this.picturePool);
+        this.fullUpdate();
+      }
     }); 
+ 
   }
 
   async tabChanged(data: {index:number}): Promise<void> {
     if (this.pool && data && data.index !== undefined) {
       this.pool.mode = ScreenUtils.SCREEN_MODE_TABLE[data.index];
-      ScreenUtils.recalculateHtml(this.pool);
-      await ScreenUtils.recalculateFile(this.pool);
+      await this.fullUpdate();
     }
+  }
+
+  async fullUpdate(): Promise<void> {
+    if (!this.pool) {
+      return;
+    }
+    ScreenUtils.recalculateHtml(this.pool);
+    await ScreenUtils.recalculateFile(this.pool);
   }
 
   async save(): Promise<void> {
@@ -83,8 +112,7 @@ export class ScreenDetailComponent implements OnInit {
     if (!this.pool || !this.pool.name) {
       return;
     }
-    ScreenUtils.recalculateHtml(this.pool);
-    await ScreenUtils.recalculateFile(this.pool);
+    await this.fullUpdate();
     let body = this.pool;
     const api$ = this.pool.id ? this.screenService.put(body) : this.screenService.post(body);
     api$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(()=>{
@@ -103,6 +131,7 @@ export class ScreenDetailComponent implements OnInit {
       message: "",
       color: "#ffffff",
       fontSize: "60",
+      gap: "80",
     });
   }
 }

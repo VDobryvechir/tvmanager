@@ -1,5 +1,6 @@
 import { Screen, ScreenText } from "../model/screen";
 import { Media } from "../model/media";
+import SvgConverter from "./svg-converter";
 
 export default class ScreenUtils {
 
@@ -22,18 +23,23 @@ export default class ScreenUtils {
         ScreenUtils.root = root;
     }
 
+    static getModeIndex(name: string): number {
+        const n = ScreenUtils.SCREEN_MODE_TABLE.findIndex(item=> item===name);
+        return n>0 ? n : 0;
+    }
+
     static generatePictureHtml(screen: Screen): string {
         if (!screen.pictureUrl) {
             return "";
         }
-        return `<img src="${ScreenUtils.root}${screen.pictureUrl}" width="100%" />`;
+        return `<img src='${ScreenUtils.root}${screen.pictureUrl}' height='100%' />`;
     } 
 
     static generateTextModeTextPart(part: ScreenText): string {
         if (!part || !part.message) {
             return "";
         }
-        const pre = `<div style='color:${part.color};font-size:${part.fontSize}px;text-align:center;padding:20px'>`;
+        const pre = `<div style='color:${part.color};font-size:${part.fontSize}px;text-align:center;padding-top:${part.gap}px'>`;
         const post = `</div>`;
         return pre + part.message + post;
     }
@@ -54,7 +60,7 @@ export default class ScreenUtils {
         if (p<=0) {
             p = 1;
         }
-        const pre = `<div style='height:${p}"%;overflow:hidden;'>`;
+        const pre = `<div style='height:${p}%;overflow:hidden;text-align:center'>`;
         const post = `</div>`;
         return pre + res + post;
     }
@@ -64,7 +70,7 @@ export default class ScreenUtils {
         if (!screen.text || !screen.text.length || !picture) {
             return picture;
         }
-        const pre = `<div style='height:${screen.pictureHeight}%;overflow:hidden'>`;
+        const pre = `<div style='height:${screen.pictureHeight}%;overflow:hidden;text-align:center'>`;
         const post = `</div>`;
         return pre + picture + post;
     }
@@ -75,7 +81,7 @@ export default class ScreenUtils {
                 screen.textPool = ScreenUtils.generatePictureHtml(screen);
                 break;
             case this.SCREEN_MODE_TEXT:
-                screen.textPool = ScreenUtils.generateTextModeText(screen) + "\n "+ ScreenUtils.generatePictureHtml(screen);
+                screen.textPool = ScreenUtils.generateTextModeText(screen) + "\n "+ ScreenUtils.generatePictureAsPartOfText(screen);
                 break;
         }
     }
@@ -114,9 +120,10 @@ export default class ScreenUtils {
         }
         node.innerHTML = screen.htmlPool;
         node.style.display = "block";
-        const res = (window as any).domtoimage.toPng(node).then(function (dataUrl: string) {
+        let subNode = node.children[0] as HTMLElement;
+        const res = SvgConverter.toPng(subNode, (dataUrl: string) => {
             screen.file = dataUrl;
-            node.style.display = "none";
+            // node.style.display = "none";
         });
         return res as Promise<void>;
      }

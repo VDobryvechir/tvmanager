@@ -31,7 +31,7 @@
 
 
 
-  <mat-tab-group animationDuration="0ms" class="screen-detail-tab" (selectedTabChange)="tabChanged($event)">
+  <mat-tab-group animationDuration="0ms" class="screen-detail-tab" [(selectedIndex)]="modeIndex" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Tekst og bilde">
         <div class="screen-detail-fields"> 
           <div class="screen-detail-input">  
@@ -43,14 +43,14 @@
             </div>
             <mat-form-field>
                 <mat-label>Velg Bilde</mat-label>
-                <mat-select>
+                <mat-select [formControl]="picture">
                   @for (item of picturePool; track item.id) {
                     <mat-option [value]="item.id">{{item.name}}</mat-option>
                   }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
-              <mat-label>Bildhöhe in %</mat-label>
+              <mat-label>bildehøyde i %</mat-label>
               <input type="number" matInput placeholder="70" [(ngModel)]="pool.pictureHeight" />
             </mat-form-field>
           </div>  
@@ -67,7 +67,11 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>skriftstørrelse i px</mat-label>
-                  <input type="number" matInput placeholder="20" [(ngModel)]="item.fontSize" />
+                  <input type="number" matInput placeholder="70" [(ngModel)]="item.fontSize" />
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>gap på toppen i px</mat-label>
+                  <input type="number" matInput placeholder="70" [(ngModel)]="item.gap" />
                 </mat-form-field>
               </div>
             }
@@ -83,7 +87,7 @@
         <div class="screen-detail-fields"> 
             <mat-form-field>
                 <mat-label>Velg Bilde</mat-label>
-                <mat-select>
+                <mat-select [formControl]="picture">
                   @for (item of picturePool; track item.id) {
                     <mat-option [value]="item.id">{{item.name}}</mat-option>
                   }
