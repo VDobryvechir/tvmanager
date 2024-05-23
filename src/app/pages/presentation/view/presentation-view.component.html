@@ -2,7 +2,7 @@
   <div class="presentation-view__bar">
     <div class="presentation-view__bar-name">{{ pool.name }}</div>
     <div class="presentation-view__bar-action">
-      <span (click)="remove()" title="aktivere">
+      <span (click)="activate()" title="aktivere">
         <mat-icon aria-hidden="false" aria-label="Activate" fontIcon="flip_camera_android"></mat-icon>
       </span>
       <a routerLink="/presentation/{{pool.id}}">

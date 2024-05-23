@@ -11,6 +11,8 @@ import { Group } from '../model/group';
 })
 export class PresentationService {
   url = "/api/v1/presentation";
+  activationUrl = "/api/v1/control";
+
   constructor(private api: ApiService) { }
 
   getRoot(): string {
@@ -147,4 +149,9 @@ export class PresentationService {
   deleteItem(id: string): Observable<any> {
     return this.api.delete(this.url + "/" + id);
   }
+
+  activate(id: string): Observable<any> {
+    return this.api.get(this.activationUrl + "/" + id);
+  }
+
 }

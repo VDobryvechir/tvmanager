@@ -37,4 +37,16 @@ export class PresentationViewComponent implements OnDestroy {
     });
 
   }
+
+  activate(): void {
+    if (!this.pool || !this.pool.id) {
+      return;
+    }
+    const api$ =  this.presentationService.activate(this.pool.id);
+    this.unsubscribeQuery = api$.subscribe(()=>{
+      window.console.log("successfully activated");
+    });
+
+  }
+
 }
