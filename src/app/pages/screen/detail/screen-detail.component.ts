@@ -42,6 +42,7 @@ export class ScreenDetailComponent implements OnInit {
   picture = new FormControl('',[]);
   destroyRef = inject(DestroyRef);
   modeIndex = 0;
+  fullUpdateReady = false;
 
   constructor(private screenService: ScreenService,
     private route: ActivatedRoute,
@@ -69,7 +70,7 @@ export class ScreenDetailComponent implements OnInit {
         this.picture.setValue(this.pool.picture);
       }
       ScreenUtils.adjustAllParameters(info.pool, info.video, info.picture);
-      this.fullUpdate();
+      setTimeout(this.initiateFullUpdate.bind(this), 300);
     });
     this.video.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -99,10 +100,16 @@ export class ScreenDetailComponent implements OnInit {
     }
   }
 
+  async initiateFullUpdate(): Promise<void> {
+    this.fullUpdateReady = true;
+    return this.fullUpdate();
+  }
+
   async fullUpdate(): Promise<void> {
-    if (!this.pool) {
+    if (!this.pool || !this.fullUpdateReady) {
       return;
     }
+    window.console.log("full update", this.pool);
     ScreenUtils.recalculateHtml(this.pool);
     await ScreenUtils.recalculateFile(this.pool);
   }

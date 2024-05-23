@@ -123,14 +123,19 @@ export default class ScreenUtils {
         }
         node.innerHTML = screen.htmlPool;
         node.style.display = "block";
-        let subNode = node.children[0] as HTMLElement;
+        let subNode = CanvasUtils.fixNodeForImageLessProcessing(node.children[0] as HTMLElement);
         const res = SvgConverter.toPng(subNode, (dataUrl: string) => {
-            screen.file = dataUrl;
-            const imgNode = document.getElementById(ScreenUtils.singleImageId);
-            if (imgNode) {
-                screen.file = CanvasUtils.fixImagePicture(dataUrl, imgNode, node);
-            }
-            node.style.display = "none";
+          screen.file = dataUrl;
+          const imgNode = document.getElementById(ScreenUtils.singleImageId);
+          if (imgNode) {
+            CanvasUtils.fixImagePicture(dataUrl, imgNode, node!).then((data: string) => {
+              screen.file = data;
+              CanvasUtils.releaseNodeForImageLessProcessing();
+            });
+          } else {
+            CanvasUtils.releaseNodeForImageLessProcessing(); 
+          } 
+            node!.style.display = "none";
         });
         return res as Promise<void>;
      }
