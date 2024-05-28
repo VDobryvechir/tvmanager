@@ -1,0 +1,57 @@
+.task-view {
+    width: 320px;
+    height: 160px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    text-align: center;
+    background-color: yellow;
+
+    &__bar {
+        height: 160px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &-action {
+            width: 35px;
+            height: 160px;
+            overflow: hidden;
+            padding: 3px 5px;
+        }
+
+        &-info {
+            width:280px;
+            height: 160px;
+            overflow: hidden;
+        }
+
+        &-name {
+            color:blue;
+        }
+
+    }
+
+    &-ready {
+        color: green;
+    }
+
+    &-upload {
+        color:coral;
+    }
+
+    &-good {
+        color:rgb(25, 240, 57);
+    }
+
+    &-unknown {
+        color:rgb(206, 206, 37);
+    }
+
+    &-lost {
+        color:rgb(154, 54, 17);
+    }
+
+}
+

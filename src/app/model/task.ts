@@ -1,17 +1,23 @@
+export interface TaskConfig {
+    file: string[];
+    duration: number[];
+};
+
 export interface Task {
-    id?: string;
+    id: string;
     name: string;
-    url?: string;
-    oldPresentationName?: string;
-    oldPresentationId?: string;
-    oldPresentationVersion?: string;
-    newPresentationName?: string;
-    newPresentationId?: string;
-    newPresentationVersion?: string;
-    connectStatus?: number;
-    transferStatus?: number;
-    data?: unknown;
-    fileMap?: unknown;
-    fileRest?: string[];
-}
+    url: string;
+    oldPresentationName: string;
+    oldPresentationId: string;
+    oldPresentationVersion: string;
+    newPresentationName: string;
+    newPresentationId: string;
+    newPresentationVersion: string;
+    connectionStatus: number;
+    taskStatus: number;
+    config: TaskConfig;
+    realFiles: string[];
+    leftFiles: string[];
+};
+
   

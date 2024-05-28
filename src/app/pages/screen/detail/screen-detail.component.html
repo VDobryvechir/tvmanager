@@ -1,13 +1,18 @@
 @if (pool) {
+<div class="screen-detail-whole">
+  <div class="screen-detail-main">
   <div class="screen-detail-input">
     <mat-form-field appearance="fill">
       <mat-label>skjerm navn</mat-label>
       <input matInput placeholder="beskrivelse" [(ngModel)]="pool.name">
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>bakgrunnsfarge</mat-label>
-      <input matInput placeholder="beskrivelse" [(ngModel)]="pool.backgroundColor" (change)="fullUpdate()">
-    </mat-form-field>
+    <span>
+    <span class="screen-detail-text">bakgrunnsfarge</span>
+      <p-colorPicker [(ngModel)]="pool.backgroundColor" (change)="fullUpdate()" />
+    </span>
+    <span class="screen-detail-refresh">
+      <p-button label="Forfriske" severity="success" (onClick)="fullUpdate()" />
+    </span>
   </div>
 
   <div class="screen-detail-padding">
@@ -54,17 +59,17 @@
               <input type="number" matInput placeholder="70" [(ngModel)]="pool.pictureHeight"  (change)="fullUpdate()" />
             </mat-form-field>
           </div>  
-          <div>
+          <div class="screen-detail-container">
             @for(item of pool.text; track item) {
               <div class="screen-detail-input">
                 <mat-form-field appearance="fill">
                   <mat-label>Tekst</mat-label>
                   <input matInput placeholder="" [(ngModel)]="item.message"  (change)="fullUpdate()" />
                 </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>tekstfarge</mat-label>
-                  <input matInput placeholder="#ffffff" [(ngModel)]="item.color"  (change)="fullUpdate()" />
-                </mat-form-field>
+                <span class="screen-detail-simple">
+                   <span class="screen-detail-line-text">tekstfarge</span>
+                   <p-colorPicker [(ngModel)]="item.color" (change)="fullUpdate()" />
+                </span>
                 <mat-form-field appearance="fill">
                   <mat-label>skriftstørrelse i px</mat-label>
                   <input type="number" matInput placeholder="70" [(ngModel)]="item.fontSize"   (change)="fullUpdate()" />
@@ -110,6 +115,7 @@
 
 </mat-tab-group>
 <save-footer cancelRoute="/screen" (save)="save()"></save-footer>
+</div>
 @if (pool.file) {
   <div class="screen-detail-preview">
     <div class="screen-detail-preview__message">Forhåndsvisning</div>
@@ -122,4 +128,5 @@
     }
   </div>
   }
+</div>
 }

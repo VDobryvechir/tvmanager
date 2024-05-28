@@ -1,0 +1,41 @@
+<div class="task-view">
+  <div class="task-view__bar">
+    <div class="task-view__bar-info">
+      <div class="task-view__bar-name">
+        {{ pool.name }}
+      </div>
+      <div>
+        {{ pool.url }}
+      </div>
+      @if (pool.newPresentationId!==pool.oldPresentationId || pool.newPresentationVersion!==pool.oldPresentationVersion || pool.taskStatus!==1000) {
+        <div class="task-view-upload">
+          Lastet opp: {{ pool.oldPresentationName }} ({{ pool.oldPresentationVersion }})
+          Nåværende: {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})
+          Framgang: {{pool.taskStatus * 0.1 }} %
+        </div>
+      } @else {
+        <div class="task-view-ready">
+          {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})
+        </div>
+      }
+      @if (pool.connectionStatus===0) {
+        <div class="task-view-good">
+          God forbindelse
+        </div>
+      } @else if (pool.connectionStatus<0){
+        <div class="task-view-unknown">
+          Prøver å koble til
+        </div>
+      } @else {
+        <div class="task-view-lost">
+          Mistet tilkobling ({{ pool.connectionStatus }})
+        </div>
+      }
+    </div>
+    <div class="task-view__bar-action">
+      <span (click)="remove()" title="fjerne">
+        <mat-icon aria-hidden="false" aria-label="Remove" fontIcon="delete_forever"></mat-icon>
+      </span>
+    </div>
+  </div>
+</div>

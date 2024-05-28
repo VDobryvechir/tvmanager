@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  serverAddress: string = "http://localhost:2024";
+  serverAddress: string = "http://localhost:80";
 
   constructor(protected httpClient: HttpClient) {
       if (!window.location.origin.includes(":4200")) {

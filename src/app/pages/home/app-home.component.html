@@ -1,10 +1,11 @@
 @if (!pool) {
     <app-loader message="Hjem side lasting"></app-loader>
 } @else {
+  <div class="app-home-list">
   @for (item of pool; track item.id) {
-       <div>{{ item.name }}</div> 
+    <app-home-view [pool]="item" (refresh)="refresh()"></app-home-view>
       } @empty {
         <app-page-message [message]="['Ingen info ennå']"></app-page-message> 
     }
-    
+  </div>  
 }

@@ -13,6 +13,8 @@ import { ScreenService } from '../../../services/screen.service';
 import ScreenUtils from '../../../utils/screen-utils';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-screen-detail',
@@ -27,6 +29,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatSelectModule,
     MatFormFieldModule, 
     SaveFooterComponent,
+    ColorPickerModule,
+    ButtonModule,
   ],
   templateUrl: './screen-detail.component.html',
   styleUrl: './screen-detail.component.less'
