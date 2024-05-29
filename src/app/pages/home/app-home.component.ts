@@ -6,58 +6,17 @@ import { TaskService } from '../../services/task.service';
 import { Subscription } from 'rxjs';
 import { AddButtonComponent } from '../../components/add-button/add-button.component';
 import { AppHomeViewComponent } from './view/app-home-view.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent,AppHomeViewComponent],
+  imports: [AppLoaderComponent, PageMessageComponent, AddButtonComponent,AppHomeViewComponent,ButtonModule],
   templateUrl: './app-home.component.html',
   styleUrl: './app-home.component.less'
 })
 export class AppHomeComponent implements OnInit, OnDestroy{
-  designTime: boolean = false;
-  pool: Task[] | undefined = this.designTime ? [
-     {
-         id: "378973287932",
-         name: "Gruppe at the central plant",
-         url: "TSK2016004",
-         oldPresentationName: "two people on the sea",
-         oldPresentationVersion: "123",
-         oldPresentationId: "87987676876",
-         newPresentationId: "434587687678",
-         newPresentationName: "to mennesker på sjøen",
-         newPresentationVersion: "5464980",
-         config: {
-          file: ["what"],
-          duration: [10],
-         },
-         taskStatus: 900,
-         connectionStatus: -1,
-         leftFiles: ["v897"],
-         realFiles: ["46546"],
-     },
-     {
-      id: "3784908934",
-      name: "Gruppe at the bottom side",
-      url: "TSK2016004",
-      oldPresentationName: "two people on the sea",
-      oldPresentationVersion: "5464980",
-      oldPresentationId: "434587687678",
-      newPresentationId: "434587687678",
-      newPresentationName: "to mennesker på sjøen",
-      newPresentationVersion: "5464980",
-      config: {
-       file: ["what"],
-       duration: [10],
-      },
-      taskStatus: 1000,
-      connectionStatus: 0,
-      leftFiles: ["v897"],
-      realFiles: ["46546"],
-  },
-  
-
-  ] : undefined;
+  pool: Task[] | undefined;
 
   unsubscribeQuery!: Subscription;
 
@@ -70,9 +29,7 @@ export class AppHomeComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    if (!this.designTime) {
-      this.refresh();
-    }
+    this.refresh();
   }
 
   refresh(): void {

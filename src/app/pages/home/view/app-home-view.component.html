@@ -9,9 +9,9 @@
       </div>
       @if (pool.newPresentationId!==pool.oldPresentationId || pool.newPresentationVersion!==pool.oldPresentationVersion || pool.taskStatus!==1000) {
         <div class="task-view-upload">
-          Lastet opp: {{ pool.oldPresentationName }} ({{ pool.oldPresentationVersion }})
-          Nåværende: {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})
-          Framgang: {{pool.taskStatus * 0.1 }} %
+          <div><span class="task-view-upload-title">Lastet opp:</span> {{ pool.oldPresentationName }} ({{ pool.oldPresentationVersion }})</div>
+          <div><span class="task-view-upload-title">Nåværende:</span> {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})</div>
+          <div><span class="task-view-upload-title">Framgang:</span> {{pool.taskStatus * 0.1 }} % </div>
         </div>
       } @else {
         <div class="task-view-ready">

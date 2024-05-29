@@ -8,7 +8,7 @@ import { Task } from '../model/task';
   providedIn: 'root'
 })
 export class TaskService {
-  url = "/api/v1/group";
+  url = "/api/v1/task";
   constructor(private api: ApiService) { }
 
   getAll(): Observable<Task[]> {

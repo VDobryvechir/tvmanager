@@ -1,6 +1,11 @@
 <div class="presentation-view">
   <div class="presentation-view__bar">
-    <div class="presentation-view__bar-name">{{ pool.name }}</div>
+    <div class="presentation-view__bar-name">
+         {{ pool.name }}
+         @if (pool.version && pool.version!="0") {
+            ({{ pool.version }})
+         }
+    </div>
     <div class="presentation-view__bar-action">
       <span (click)="activate()" title="aktivere">
         <mat-icon aria-hidden="false" aria-label="Activate" fontIcon="flip_camera_android"></mat-icon>

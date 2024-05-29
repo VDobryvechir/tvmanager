@@ -1,6 +1,10 @@
 @if (!pool) {
     <app-loader message="Hjem side lasting"></app-loader>
 } @else {
+  <div class="app-home-refresh">
+      <p-button label="Forfriske" (onClick)="refresh()" />
+  </div>
+
   <div class="app-home-list">
   @for (item of pool; track item.id) {
     <app-home-view [pool]="item" (refresh)="refresh()"></app-home-view>
