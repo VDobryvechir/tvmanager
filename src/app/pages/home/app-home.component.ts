@@ -15,7 +15,7 @@ import { AppHomeViewComponent } from './view/app-home-view.component';
   styleUrl: './app-home.component.less'
 })
 export class AppHomeComponent implements OnInit, OnDestroy{
-  designTime: boolean = true;
+  designTime: boolean = false;
   pool: Task[] | undefined = this.designTime ? [
      {
          id: "378973287932",
