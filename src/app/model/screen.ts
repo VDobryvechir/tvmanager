@@ -23,7 +23,7 @@ export interface Screen {
     paddingTop: number;
     paddingBottom: number;
     file: string;
-
+    fileName?: string;
     // for frontend internal use 
     videoUrl?: string;
     pictureUrl?: string;

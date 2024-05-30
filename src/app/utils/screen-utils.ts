@@ -148,7 +148,8 @@ export default class ScreenUtils {
             } else {
                 screen.videoUrl=item.file;
                 if (screen.mode===this.SCREEN_MODE_VIDEO) {
-                    screen.file = screen.videoUrl || "";
+                  screen.file = screen.videoUrl || "";
+                  screen.fileName = item.fileName; 
                 }
             }
         }
