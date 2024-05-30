@@ -8,7 +8,7 @@
     </mat-form-field>
     <span>
     <span class="screen-detail-text">bakgrunnsfarge</span>
-      <p-colorPicker [(ngModel)]="pool.backgroundColor" (change)="fullUpdate()" />
+      <p-colorPicker [(ngModel)]="pool.backgroundColor" (change)="fullUpdate()" (ngModelChange)="modelChange($event)" />
     </span>
     <span class="screen-detail-refresh">
       <p-button label="Forfriske" severity="success" (onClick)="fullUpdate()" />

@@ -144,4 +144,8 @@ export class ScreenDetailComponent implements OnInit {
       gap: "80",
     });
   }
+
+  modelChange(v: any): void {
+    window.console.log("modelChange", v);
+  }
 }

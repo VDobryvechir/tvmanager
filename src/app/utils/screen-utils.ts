@@ -94,7 +94,7 @@ export default class ScreenUtils {
             screen.htmlPool=`<video width='100%' height='100%' controls><source src='${ScreenUtils.root}${screen.videoUrl}' /></video>`;
             return;
         }
-        const pre = `<div style='height:${this.SCREEN_RESOLUTION_HEIGHT}px;background-color:${screen.backgroundColor};padding:${screen.paddingTop}px ${screen.paddingRight}px ${screen.paddingBottom}px ${screen.paddingLeft}px'>`;
+        const pre = `<div style='box-sizing: border-box;height:${this.SCREEN_RESOLUTION_HEIGHT}px;background-color:${screen.backgroundColor};padding:${screen.paddingTop}px ${screen.paddingRight}px ${screen.paddingBottom}px ${screen.paddingLeft}px'>`;
         const post = `</div>`;
         screen.htmlPool = pre + screen.textPool + post;
     }
