@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { PresentationService } from '../../../services/presentation.service';
 import { Subscription } from 'rxjs';
 import { Presentation } from '../../../model/presentation';
+import { MatDialog } from '@angular/material/dialog';
+import { PresentationActivateComponent } from '../activate/presentation-activate.component'
 
 @Component({
   selector: 'presentation-view',
@@ -19,7 +21,9 @@ export class PresentationViewComponent implements OnDestroy {
 
   unsubscribeQuery!: Subscription;
 
-  constructor(private presentationService: PresentationService) {
+  constructor(private presentationService: PresentationService,
+    public dialog: MatDialog,
+  ) {
 
   }
 
@@ -42,11 +46,9 @@ export class PresentationViewComponent implements OnDestroy {
     if (!this.pool || !this.pool.id) {
       return;
     }
-    const api$ =  this.presentationService.activate(this.pool.id);
-    this.unsubscribeQuery = api$.subscribe(()=>{
-      window.console.log("successfully activated");
+    this.dialog.open(PresentationActivateComponent, {
+      data: this.pool,
     });
-
   }
 
 }

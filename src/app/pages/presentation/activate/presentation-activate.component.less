@@ -1,0 +1,70 @@
+.presentation-activate {
+  width: 320px;
+  height: 300px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  text-align: center;
+
+  &__screen-info {
+    color: brown;
+  }
+
+  &__group-info {
+    color: rgb(54, 220, 17);
+  }
+
+  &__bar {
+    display: flex;
+    justify-content: space-between;
+    height: 90px;
+    overflow: hidden;
+
+    &-action {
+      width: 35px;
+      height: 90px;
+      overflow: hidden;
+      padding: 3px 5px;
+    }
+
+    &-name {
+      width: 280px;
+      height: 90px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: blue;
+    }
+  }
+
+  &__media {
+    width: 320px;
+    height: 240px;
+    overflow: hidden;
+  }
+
+  &__state {
+    height: 80px;
+    text-align: center;
+    display: flex;
+    padding: 7px;
+    justify-content: center;
+    align-items: center;
+
+    &._activating {
+      background-color: #FFE4B5;
+      color: #C71585;
+    }
+
+    &._success {
+      background-color: forestgreen;
+      color: yellow;
+    }
+
+    &._fail {
+      background-color: #C71585;
+      color: white;
+    }
+  }
+}

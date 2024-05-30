@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Aktivering av presentasjon</h2>
+<mat-dialog-content>
+<div class="presentation-activate">
+  <div class="presentation-activate__bar">
+    <div class="presentation-activate__bar-name">
+         {{ pool.name }}
+         @if (pool.version && pool.version!="0") {
+            ({{ pool.version }})
+         }
+    </div>
+  </div>
+  <div class="presentation-activate__media">
+    <div class="presentation-activate__group-info">{{ pool.groupInfo}}</div>
+    <div class="presentation-activate__screen-info">{{ pool.screenInfo}}</div>
+    <div>
+      Framgang:
+      @if (!response) {
+      <div class="presentation-activate__state _activating">Aktiveres nå</div>
+      } @else if (response.error) {
+      <div class="presentation-activate__state _fail">{{ response.error }}</div>
+      } @else if (response.tv?.length===1) {
+      <div class="presentation-activate__state _success"> Ferdig (1 pc) </div>
+      } @else if (response.tv?.length) {
+      <div class="presentation-activate__state _success"> Ferdig ({{ response.tv.length }} pc-er) </div>
+      } @else {
+      <div class="presentation-activate__state _fail"> Datafeil </div>
+      }
+    </div>
+  </div>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close cdkFocusInitial>Lukke</button>
+</mat-dialog-actions>
