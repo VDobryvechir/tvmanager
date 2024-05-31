@@ -10,4 +10,18 @@
 9. Зробити можливим робити падінгі на відео.
 10. Зробити отримання інформації про поточний конфіг через info запит на комп. Зробити цей вивід в окремому окні через таску
 
-    
+
+2
+WINDOWS 7
+Place the full path to the command or bat file into the registry under HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+It will run under the system account    
+
+WINDOWS 8.1
+I had to set the event up for "Windows 8.1" on the General tab in my case for the event to run properly.
+
+the path name of the program is %windir%\system32\osk.exe
+So, run regedit.exe, start the search for osk.exe (you can do it from menu above or by pressing Ctrl + B). Type “osk.exe” in the search field. Click Find (Søk etter neste). The name of the entry must be “Run”. If you find a different entry, click F3 to continue the search.  
+Datamascin  HKEY_USERS  .DEFAULT  Software  Microsoft  Windows  Current Version  RunOnce   - here you should remove osk.exe record. 
+Innstillinger  Xbox Console Companion  Apptillatelser  Bakgrunnsapper  Av
+Also, go to Settings (Innstillinger), Applications (apper), Startup (Opp Start), and at the right panel switch off the screen keyboard (skjermtastatur).
