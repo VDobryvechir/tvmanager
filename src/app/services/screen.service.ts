@@ -26,7 +26,7 @@ export class ScreenService {
     paddingTop: 0,
   };
 
-  constructor(private api: ApiService) { }
+  constructor(public api: ApiService) { }
 
   getAll(): Observable<Screen[]> {
     return this.api.get(this.url);

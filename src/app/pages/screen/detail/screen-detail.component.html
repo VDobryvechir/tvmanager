@@ -10,9 +10,6 @@
     <span class="screen-detail-text">bakgrunnsfarge</span>
       <p-colorPicker [(ngModel)]="pool.backgroundColor" (change)="fullUpdate()" (ngModelChange)="modelChange($event)" />
     </span>
-    <span class="screen-detail-refresh">
-      <p-button label="Forfriske" severity="success" (onClick)="fullUpdate()" />
-    </span>
   </div>
 
   <div class="screen-detail-padding">
@@ -68,7 +65,7 @@
                 </mat-form-field>
                 <span class="screen-detail-simple">
                    <span class="screen-detail-line-text">tekstfarge</span>
-                   <p-colorPicker [(ngModel)]="item.color" (change)="fullUpdate()" />
+                   <p-colorPicker [(ngModel)]="item.color" (ngModelChange)="modelChange($event)" />
                 </span>
                 <mat-form-field appearance="fill">
                   <mat-label>skriftstørrelse i px</mat-label>

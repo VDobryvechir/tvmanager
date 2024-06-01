@@ -15,6 +15,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ButtonModule } from 'primeng/button';
+import { BehaviorSubject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-screen-detail',
@@ -47,6 +48,7 @@ export class ScreenDetailComponent implements OnInit {
   destroyRef = inject(DestroyRef);
   modeIndex = 0;
   fullUpdateReady = false;
+  debouncedUpdate$ = new BehaviorSubject(null);
 
   constructor(private screenService: ScreenService,
     private route: ActivatedRoute,
@@ -94,7 +96,13 @@ export class ScreenDetailComponent implements OnInit {
         this.fullUpdate();
       }
     }); 
- 
+    this.debouncedUpdate$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      debounceTime(500),
+    ).subscribe(()=>{
+      this.fullUpdate();
+      window.console.log('Debounced update');
+    })
   }
 
   async tabChanged(data: {index:number}): Promise<void> {
@@ -121,6 +129,9 @@ export class ScreenDetailComponent implements OnInit {
   async save(): Promise<void> {
     window.console.log('save', this.pool);
     if (!this.pool || !this.pool.name) {
+      if (this.pool) {
+        this.screenService.api.showErrorMessage("navn må angis");
+      }
       return;
     }
     let body = this.pool;
@@ -146,6 +157,6 @@ export class ScreenDetailComponent implements OnInit {
   }
 
   modelChange(v: any): void {
-    window.console.log("modelChange", v);
+    this.debouncedUpdate$.next(null);
   }
 }

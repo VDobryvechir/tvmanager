@@ -36,12 +36,16 @@ export class ApiService {
     } else if (error.message) {
       message = "Feil " + error.message;
     }
+    this.showErrorMessage(message);
+    return EMPTY;
+  }
+
+  showErrorMessage(message: string): void {
     this.snackBar.open(message, "Lukke", {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
       duration: this.durationInSeconds * 1000,
     });
-    return EMPTY;
   }
 
   getRootUrl(): string {
