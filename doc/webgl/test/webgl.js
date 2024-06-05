@@ -1,4 +1,3 @@
-const videoFileName = "";
 let cubeRotation = 0.0;
 let deltaTime = 0;
 // will set to true when video can be copied to texture
@@ -21,7 +20,7 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
   }
 
   // Set clear color to black, fully opaque
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);
   // Clear the color buffer with specified clear color
   gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -29,30 +28,17 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
 
   const vsSource = `
   attribute vec4 aVertexPosition;
-  attribute vec3 aVertexNormal;
   attribute vec2 aTextureCoord;
 
-  uniform mat4 uNormalMatrix;
   uniform mat4 uModelViewMatrix;
   uniform mat4 uProjectionMatrix;
 
   varying highp vec2 vTextureCoord;
-  varying highp vec3 vLighting;
 
   void main(void) {
     gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
     vTextureCoord = aTextureCoord;
 
-    // Apply lighting effect
-
-    highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
-    highp vec3 directionalLightColor = vec3(1, 1, 1);
-    highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
-
-    highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
-
-    highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-    vLighting = ambientLight + (directionalLightColor * directional);
   }
 `;
 
@@ -60,14 +46,13 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
 
   const fsSource = `
   varying highp vec2 vTextureCoord;
-  varying highp vec3 vLighting;
 
   uniform sampler2D uSampler;
 
   void main(void) {
     highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
 
-    gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
+    gl_FragColor = texelColor;
   }
 `;
 
@@ -83,7 +68,6 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
     program: shaderProgram,
     attribLocations: {
       vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
-      vertexNormal: gl.getAttribLocation(shaderProgram, "aVertexNormal"),
       textureCoord: gl.getAttribLocation(shaderProgram, "aTextureCoord"),
     },
     uniformLocations: {
@@ -92,7 +76,6 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
         "uProjectionMatrix"
       ),
       modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
-      normalMatrix: gl.getUniformLocation(shaderProgram, "uNormalMatrix"),
       uSampler: gl.getUniformLocation(shaderProgram, "uSampler"),
     },
   };
@@ -102,7 +85,7 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
   const buffers = initBuffers(gl);
 
   const texture = initTexture(gl);
-  const video = setupVideo(files[0]);
+  const video = getVideoTexture(files[0], texture);
 
   // Flip image pixels into the bottom-to-top order that WebGL expects.
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -114,12 +97,13 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
     now *= 0.0004; // convert to seconds
     deltaTime = now - then;
     then = now;
+    video.prepareTexture(gl,0);
+    let txt = video.getTexture(gl);
+    // if (video.copyVideo) {
+    //  updateTexture(gl, texture, video.video);
+    // }
 
-    if (copyVideo) {
-      updateTexture(gl, texture, video);
-    }
-
-    drawScene(gl, programInfo, buffers, texture, cubeRotation);
+    drawScene(gl, programInfo, buffers, txt, cubeRotation);
     cubeRotation += deltaTime;
 
     requestAnimationFrame(render);
@@ -221,24 +205,75 @@ function initTexture(gl) {
   return texture;
 }
 
-function updateTexture(gl, texture, video) {
-  const level = 0;
-  const internalFormat = gl.RGBA;
-  const srcFormat = gl.RGBA;
-  const srcType = gl.UNSIGNED_BYTE;
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    level,
-    internalFormat,
-    srcFormat,
-    srcType,
-    video
-  );
+let dvno=0;
+function showImage(img) {
+        const canva = document.getElementById("workcanvas");
+        if (!canva) {
+             return;
+        } 
+        const ctx = canva.getContext("2d");
+        ctx.drawImage(img, 0, 0);
 }
 
-function setupVideo(url) {
+function preupdateVideo(videoBlock) {
+        let canva = videoBlock.canvas;
+        if (!canva) {
+           canva = document.createElement("canvas");
+           // TODO may be use videoBlock.video.videoHeight, videoBlock.video.videoWidth to optimize view
+           canva.width = 320;
+           canva.height =  240;
+           videoBlock.canvas = canva;
+           document.body.appendChild(canva);
+        }
+        const ctx = canva.getContext("2d");
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, canva.width, canva.height);  
+        ctx.drawImage(videoBlock.video, 1, 1,318,238);
+        const base64URI = canva.toDataURL();
+        dstImage = new Image();    
+        dstImage.onload = ()=>{
+            videoBlock.image = dstImage; 
+            dstImage.onload = null; 
+        }; 
+        dstImage.src = base64URI;
+}
+function getVideoTexture(url, texture) {
+  const updateTexture = (gl, texture, img, nr) => {
+	const level = 0;
+  	const internalFormat = gl.RGBA;
+  	const srcFormat = gl.RGBA;
+  	const srcType = gl.UNSIGNED_BYTE;
+        gl.activeTexture(gl.TEXTURE4 + (nr % 4));
+  	gl.bindTexture(gl.TEXTURE_2D, texture);
+  	gl.texImage2D(
+    		gl.TEXTURE_2D,
+    		level,
+    		internalFormat,
+    		srcFormat,
+    		srcType,
+    		img
+  	);
+        showImage(img);
+        console.log("image", nr);
+  }
   const video = document.createElement("video");
+  const videoBlock = {
+     texture: texture,
+     video: video,
+     copyVideo: false,
+     nr: dvno++,
+     getTexture: (gl) => {
+         return videoBlock.texture;
+     },
+     prepareTexture: (gl,nr) => {
+      	if (videoBlock.copyVideo) {
+                preupdateVideo(videoBlock);
+                if (videoBlock.image) {
+      		    updateTexture(gl, videoBlock.texture, videoBlock.image, videoBlock.nr);
+                }
+    	}
+     }
+  } 
 
   let playing = false;
   let timeupdate = false;
@@ -250,32 +285,31 @@ function setupVideo(url) {
   // Waiting for these 2 events ensures
   // there is data in the video
 
-  video.addEventListener(
-    "playing",
-    () => {
+  const checkReady = ()=>{
+    if (playing && timeupdate) {
+      videoBlock.copyVideo = true;
+      console.log("started video", videoBlock);
+    }
+  }
+
+  const playingListener = () => {
       playing = true;
       checkReady();
-    },
-    true
-  );
+      video.removeEventListener("playing", playingListener, true);	
+  };
 
-  video.addEventListener(
-    "timeupdate",
-    () => {
+  video.addEventListener("playing", playingListener, true);
+
+  const timeUpdateListener = () => {
       timeupdate = true;
       checkReady();
-    },
-    true
-  );
+      video.removeEventListener("timeupdate", timeUpdateListener, true);	
+  };
+  video.addEventListener("timeupdate", timeUpdateListener, true);
 
   video.src = url;
   video.play();
 
-  function checkReady() {
-    if (playing && timeupdate) {
-      copyVideo = true;
-    }
-  }
-
-  return video;
+  return videoBlock;
 }
+

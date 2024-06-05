@@ -5,11 +5,9 @@ function initBuffers(gl) {
 
   const indexBuffer = initIndexBuffer(gl);
 
-  const normalBuffer = initNormalBuffer(gl);
 
   return {
     position: positionBuffer,
-    normal: normalBuffer,
     textureCoord: textureCoordBuffer,
     indices: indexBuffer,
   };
@@ -140,7 +138,7 @@ function initTextureBuffer(gl) {
   const textureCoordBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 
-  const textureCoordinates = [
+  let textureCoordinates = [
     // Front
     0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
     // Back
@@ -152,6 +150,20 @@ function initTextureBuffer(gl) {
     // Right
     0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
     // Left
+    0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
+  ];
+  textureCoordinates = [
+    // Front (it was one of them standing right)
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    // Back  (it was one of them standing vertically, opposite to front)
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    // Top  it is invisible if rotation is about Y
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    // Bottom it is invisible if rotation is about Y
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    // Right  it is number 3, standing vertically
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    // Left   it is number 1, standing right
     0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
   ];
 
@@ -164,40 +176,7 @@ function initTextureBuffer(gl) {
   return textureCoordBuffer;
 }
 
-function initNormalBuffer(gl) {
-  const normalBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-
-  const vertexNormals = [
-    // Front
-    0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
-
-    // Back
-    0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0,
-
-    // Top
-    0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-
-    // Bottom
-    0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
-
-    // Right
-    1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-
-    // Left
-    -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
-  ];
-
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(vertexNormals),
-    gl.STATIC_DRAW
-  );
-
-  return normalBuffer;
-}
-
-console.log("draw 1.0.3");
+console.log("draw 1.0.4");
 
 function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
@@ -257,10 +236,6 @@ function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
     [1, 0, 0]
   ); // axis to rotate around (X)  ***/
 
-  const normalMatrix = mat4.create();
-  mat4.invert(normalMatrix, modelViewMatrix);
-  mat4.transpose(normalMatrix, normalMatrix);
-
   // Tell WebGL how to pull out the positions from the position
   // buffer into the vertexPosition attribute.
   setPositionAttribute(gl, buffers, programInfo);
@@ -269,8 +244,6 @@ function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
 
   // Tell WebGL which indices to use to index the vertices
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
-
-  setNormalAttribute(gl, buffers, programInfo);
 
   // Tell WebGL to use our program when drawing
   gl.useProgram(programInfo.program);
@@ -285,11 +258,6 @@ function drawScene(gl, programInfo, buffers, texture, cubeRotation) {
     programInfo.uniformLocations.modelViewMatrix,
     false,
     modelViewMatrix
-  );
-  gl.uniformMatrix4fv(
-    programInfo.uniformLocations.normalMatrix,
-    false,
-    normalMatrix
   );
 
   // Tell WebGL we want to affect texture unit 0
@@ -367,25 +335,5 @@ function setTextureAttribute(gl, buffers, programInfo) {
     offset
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.textureCoord);
-}
-
-// Tell WebGL how to pull out the normals from
-// the normal buffer into the vertexNormal attribute.
-function setNormalAttribute(gl, buffers, programInfo) {
-  const numComponents = 3;
-  const type = gl.FLOAT;
-  const normalize = false;
-  const stride = 0;
-  const offset = 0;
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexNormal,
-    numComponents,
-    type,
-    normalize,
-    stride,
-    offset
-  );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexNormal);
 }
 
