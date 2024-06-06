@@ -81,23 +81,23 @@ export default class WTextureUtils {
   	const dstImage = new Image();
   	const remakeImage = (img: HTMLImageElement, fn:()=>void) => {
       		const cnv = document.createElement("canvas");
-      		const headerHeight = img.width > 300 && img.height>100 ? 70: 0;
-      		cnv.width = img.width + 2;
-      		cnv.height = img.height + 2 + headerHeight;
+      		const headerHeight =  55;
+      		cnv.width = 320;
+      		cnv.height = 180 + headerHeight;
       		const ctx = cnv.getContext("2d");
 			if (!ctx) {
 				return;
 			}
       		ctx.fillStyle = "#000000";
       		ctx.fillRect(0, 0, cnv.width, cnv.height);
-      		ctx.drawImage(img, 1, 1 + headerHeight);
+      		ctx.drawImage(img, 1, 1 + headerHeight, cnv.width -2, cnv.height - headerHeight - 2);
       		if (headerHeight>0) {
          		ctx.fillStyle = "#00bfff";
          		ctx.fillRect(1, 1, cnv.width-2, headerHeight);
-         		ctx.font = "64px serif";
+         		ctx.font = "48px serif";
 		        ctx.fillStyle = "#ffffff";
          		let textX =  cnv.width / 2 - 50;
-         		ctx.fillText(durationInfo(duration), textX, 60);
+         		ctx.fillText(durationInfo(duration), textX, 45);
       		}
       		const base64URI = cnv.toDataURL();
       		dstImage.onload = fn; 
