@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { PresentationService } from '../../../services/presentation.service';
@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { Presentation } from '../../../model/presentation';
 import { MatDialog } from '@angular/material/dialog';
 import { PresentationActivateComponent } from '../activate/presentation-activate.component'
+import { WTaskUnit } from '../../../utils/webgl/wtask-unit';
+import { WebglUtils } from '../../../utils/webgl-utils';
 
 @Component({
   selector: 'presentation-view',
@@ -14,12 +16,14 @@ import { PresentationActivateComponent } from '../activate/presentation-activate
   templateUrl: './presentation-view.component.html',
   styleUrl: './presentation-view.component.less'
 })
-export class PresentationViewComponent implements OnDestroy {
+export class PresentationViewComponent implements AfterViewInit, OnDestroy {
   @Input() pool!: Presentation;
   @Output() refresh: EventEmitter<void> = new EventEmitter();
   @Input() root: string = '';
 
+  @ViewChild('glcanvas') elem!: ElementRef<HTMLCanvasElement>;
   unsubscribeQuery!: Subscription;
+  task?: WTaskUnit;
 
   constructor(private presentationService: PresentationService,
     public dialog: MatDialog,
@@ -27,7 +31,12 @@ export class PresentationViewComponent implements OnDestroy {
 
   }
 
+  ngAfterViewInit(): void {
+    this.task = WebglUtils.presentPictureVideosWithDuration(this.pool.files || [], this.pool.duration, this.elem.nativeElement);  
+  }
+
   ngOnDestroy(): void {
+    this.task && WebglUtils.finishPictureVideo(this.task);
     this.unsubscribeQuery && this.unsubscribeQuery.unsubscribe();  
   }
 

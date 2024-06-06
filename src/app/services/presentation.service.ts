@@ -67,9 +67,11 @@ export class PresentationService {
         const n = item.screen?.length || 0;
         let scr = "";
         let cnt = 0;
+        item.files = [];
         for(let i=0;i<n;i++) {
           let scrn = scrMap.get(item.screen[i]);
           if (scrn) {
+            item.files.push(scrn.file || "");
             scr += (cnt==0?"": ", ") + scrn.name;
             cnt++; 
           }

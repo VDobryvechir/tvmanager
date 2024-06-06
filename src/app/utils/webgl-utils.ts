@@ -1,6 +1,14 @@
-export default class WebglUtils {
+import { WTaskUnit } from "./webgl/wtask-unit";
+import { presentPictureVideosAndDuration, stopPictureVideo } from "./webgl/cube";
 
-    presentPictureVideosAndDuration(files:string[], durations:string[], elem: HTMLCanvasElement): void {
-        
+export class WebglUtils {
+
+    static presentPictureVideosWithDuration(files:string[], durations:number[], elem: HTMLCanvasElement): WTaskUnit {
+        const task = presentPictureVideosAndDuration(files, durations, elem);
+        return task;
     } 
-}
+
+    static finishPictureVideo(task: WTaskUnit): void {
+        stopPictureVideo(task);
+    }
+};

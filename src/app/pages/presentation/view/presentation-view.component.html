@@ -5,6 +5,8 @@
          @if (pool.version && pool.version!="0") {
             ({{ pool.version }})
          }
+         <div class="presentation-view__group-info">{{ pool.groupInfo}}</div>
+         <div class="presentation-view__screen-info">{{ pool.screenInfo}}</div>
     </div>
     <div class="presentation-view__bar-action">
       <span (click)="activate()" title="aktivere">
@@ -21,7 +23,6 @@
     </div>
   </div>
   <div class="presentation-view__media">
-     <div class="presentation-view__group-info">{{ pool.groupInfo}}</div>
-     <div class="presentation-view__screen-info">{{ pool.screenInfo}}</div>
+    <canvas width="320" height="240" #glcanvas></canvas>
   </div>
 </div>

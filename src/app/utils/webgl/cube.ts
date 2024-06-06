@@ -1,5 +1,12 @@
+import WTextureUtils from "./texture";
+import { TextureUnit } from "./texture-unit";
+import { WTaskUnit } from "./wtask-unit";
+import { initBuffers } from "./buffers";
+import { WBufferBlock, WProgramBlock } from "./buffer-block";
 
-function drawScene(gl, programInfo, buffers, textures, cubeRotation) {
+function drawScene(gl: WebGLRenderingContext, programInfo: WProgramBlock, buffers: WBufferBlock, textures: TextureUnit[], task: WTaskUnit) {
+  const mat4: any = (window as any)["mat4"] || {};
+
   gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
   gl.clearDepth(1.0); // Clear everything
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
@@ -17,7 +24,7 @@ function drawScene(gl, programInfo, buffers, textures, cubeRotation) {
   // and 100 units away from the camera.
 
   const fieldOfView = (23 * Math.PI) / 180; // in radians
-  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const aspect = (gl.canvas as HTMLCanvasElement).clientWidth / (gl.canvas as HTMLCanvasElement).clientHeight;
   const zNear = 0.1;
   const zFar = 100.0;
   const projectionMatrix = mat4.create();
@@ -48,7 +55,7 @@ function drawScene(gl, programInfo, buffers, textures, cubeRotation) {
   mat4.rotate(
     modelViewMatrix, // destination matrix
     modelViewMatrix, // matrix to rotate
-    cubeRotation * Math.PI * 0.1, // amount to rotate in radians
+    task.cubeRotation * Math.PI * 0.1, // amount to rotate in radians
     [0, 1, 0]
   ); // axis to rotate around (Y)
 /***************************
@@ -88,15 +95,15 @@ function drawScene(gl, programInfo, buffers, textures, cubeRotation) {
   	gl.activeTexture(gl.TEXTURE0 + i);
 
   	// Bind the texture to texture unit 0
-  	gl.bindTexture(gl.TEXTURE_2D, textures[logicTexture[i]].getTexture(gl));
+  	gl.bindTexture(gl.TEXTURE_2D, textures[task.logicTexture[i]].getTexture());
 
   	// Tell the shader we bound the texture to texture unit 0
   	gl.uniform1i(programInfo.uniformLocations.uSampler[i], i);
   }
-  const cubPart = (Math.floor(cubeRotation / 5)+2) % 4;
+  const cubPart = (Math.floor(task.cubeRotation / 5)+2) % 4;
 
-  if (logicBasis==3 || logicBasis>4) {
-     logicTexture[cubPart]=(logicTexture[(cubPart+3)%4]+1)  % logicBasis;
+  if (task.logicBasis==3 || task.logicBasis>4) {
+     task.logicTexture[cubPart]=(task.logicTexture[(cubPart+3)%4]+1)  % task.logicBasis;
   }
   {
     const vertexCount = 36;
@@ -107,14 +114,14 @@ function drawScene(gl, programInfo, buffers, textures, cubeRotation) {
   for(let i=0;i<textures.length;i++) {
         const fn = textures[i]; 
         if (fn.prepareTexture) {
-            fn.prepareTexture(gl,i);
+            fn.prepareTexture(gl);
         }
   }
 }
 
 // Tell WebGL how to pull out the positions from the position
 // buffer into the vertexPosition attribute.
-function setPositionAttribute(gl, buffers, programInfo) {
+function setPositionAttribute(gl: WebGLRenderingContext, buffers: WBufferBlock, programInfo: WProgramBlock) {
   const numComponents = 3;
   const type = gl.FLOAT; // the data in the buffer is 32bit floats
   const normalize = false; // don't normalize
@@ -132,10 +139,10 @@ function setPositionAttribute(gl, buffers, programInfo) {
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 }
-
+/*********** 
 // Tell WebGL how to pull out the colors from the color buffer
 // into the vertexColor attribute.
-function setColorAttribute(gl, buffers, programInfo) {
+function setColorAttribute(gl: WebGLRenderingContext, buffers: WBufferBlock, programInfo: WProgramBlock) {
   const numComponents = 4;
   const type = gl.FLOAT;
   const normalize = false;
@@ -152,10 +159,12 @@ function setColorAttribute(gl, buffers, programInfo) {
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 }
+****/
 
 // tell webgl how to pull out the texture coordinates from buffer
-function setTextureAttribute(gl, buffers, programInfo) {
- for(let i=0;i<4;i++) {
+function setTextureAttribute(gl: WebGLRenderingContext, buffers: WBufferBlock, programInfo: WProgramBlock) {
+ 
+  for(let i=0;i<4;i++) {
   const num = 2; // every coordinate composed of 2 values
   const type = gl.FLOAT; // the data in the buffer is 32-bit float
   const normalize = false; // don't normalize
@@ -175,47 +184,37 @@ function setTextureAttribute(gl, buffers, programInfo) {
 }
 
 
-let cubeRotation = 0.0;
-let deltaTime = 0;
-const logicTexture=[];
-let logicBasis = 0;
-let drawFinished = null;
-let drawResolve = null;
-
-async function stopPictureVideo(){
-    if (logicTexture.length===0) {
+export async function stopPictureVideo(task: WTaskUnit): Promise<any> {
+    if (task.logicTexture.length===0) {
        return Promise.resolve();
     }
-    if (drawFinished) {
-       return drawFinished;
+    if (task.drawFinished) {
+       return task.drawFinished;
     }
-    drawFinished=new Promise((resolve,reject)=>{
-       drawResolve = resolve;
+    task.drawFinished=new Promise((resolve,reject)=>{
+       task.drawResolve = resolve;
     });
-    return drawFinished; 
+    return task.drawFinished; 
 }
 
 
-function presentPictureVideosAndDuration(files, durations, canvas) {
-  drawFinished = null;
-  cubeRotation = 0.0;
-  deltaTime = 0;
-  logicBasis = files.length;
+export function presentPictureVideosAndDuration(files: string[], durations: number[], canvas: HTMLCanvasElement): WTaskUnit {
+  const task: WTaskUnit = new WTaskUnit;
+  task.logicBasis = files.length;
   // Initialize the GL context
   const gl = canvas.getContext("webgl");
-
   // Only continue if WebGL is available and working
-  if (gl === null) {
+  if (!gl) {
     alert(
       "Unable to initialize WebGL. Your browser or machine may not support it."
     );
-    return;
+    return task;
   }
   for(let i=0;i<4;i++) {
-      logicTexture[i] = i % logicBasis;
+      task.logicTexture[i] = i % task.logicBasis;
   }
-  if (logicBasis===3) {
-      logicTexture[3]=2;
+  if (task.logicBasis===3) {
+      task.logicTexture[3]=2;
   }
   // Set clear color to black, fully transparent
   gl.clearColor(0.0, 0.0, 0.0, 0.0);
@@ -270,17 +269,18 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
   }
 `;
 
-  const releaseBuf = [];
    //  + color1 + color2 + color3
   // Initialize a shader program; this is where all the lighting
   // for the vertices and so forth is established.
-  const shaderProgram = initShaderProgram(gl, vsSource, fsSource, releaseBuf);
-
+  const shaderProgram = initShaderProgram(gl, vsSource, fsSource, task.releaseBuf);
+  if (!shaderProgram) {
+    return task;
+  }
   // Collect all the info needed to use the shader program.
   // Look up which attributes our shader program is using
   // for aVertexPosition, aVertexColor and also
   // look up uniform locations.
-  const programInfo = {
+  const programInfo: WProgramBlock = {
     program: shaderProgram,
     attribLocations: {
       vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
@@ -290,9 +290,9 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
       projectionMatrix: gl.getUniformLocation(
         shaderProgram,
         "uProjectionMatrix"
-      ),
-      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
-      uSampler: [gl.getUniformLocation(shaderProgram, "uSampler0"),gl.getUniformLocation(shaderProgram, "uSampler1"),gl.getUniformLocation(shaderProgram, "uSampler2"),gl.getUniformLocation(shaderProgram, "uSampler3")],
+      ) as WebGLUniformLocation,
+      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix") as WebGLUniformLocation,
+      uSampler: [gl.getUniformLocation(shaderProgram, "uSampler0"),gl.getUniformLocation(shaderProgram, "uSampler1"),gl.getUniformLocation(shaderProgram, "uSampler2"),gl.getUniformLocation(shaderProgram, "uSampler3")] as WebGLUniformLocation[],
     },
   };
 
@@ -301,52 +301,56 @@ function presentPictureVideosAndDuration(files, durations, canvas) {
   const buffers = initBuffers(gl);
 
   // Load textures
-  const textures = loadTextures(gl, files, durations);
+  const textures = WTextureUtils.loadTextures(gl, files, durations);
   // Flip image pixels into the bottom-to-top order that WebGL expects.
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
   let then = 0;
   function releaseBuffers() {
-     logicTexture.length = 0;
+     task.logicTexture.length = 0;
      let n = textures.length;
      for(let i=0;i<n;i++) {
-         gl.deleteTexture(textures[i].texture);
+         gl!.deleteTexture(textures[i].texture);
      }
      textures.length=0;
-     n = releaseBuf.length;
+     n = task.releaseBuf.length;
      for(let i=0;i<n;i++) {
-         releaseBuf[i]();
+         task.releaseBuf[i]();
      }
-     releaseBuf.length=0;
+     task.releaseBuf.length=0;
   }
   // Draw the scene repeatedly
-  function render(now) {
+  function render(now: number) {
     now *= 0.002; // convert to seconds
-    deltaTime = now - then;
+    task.deltaTime = now - then;
     then = now;
-    drawScene(gl, programInfo, buffers, textures, cubeRotation);
-    cubeRotation += deltaTime;
-    if (drawResolve) {
+    drawScene(gl!, programInfo, buffers, textures, task);
+    task.cubeRotation += task.deltaTime;
+    if (task.drawResolve) {
        releaseBuffers();
-       drawResolve();
-       drawResolve = null; 
+       task.drawResolve(null);
+       task.drawResolve = undefined; 
     } else {
        requestAnimationFrame(render);
     }
   }
   requestAnimationFrame(render);
+  return task;
 }
 
 //
 // Initialize a shader program, so WebGL knows how to draw our data
 //
-function initShaderProgram(gl, vsSource, fsSource, releaseBuf) {
+function initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string, releaseBuf: any[]) {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
   // Create the shader program
 
   const shaderProgram = gl.createProgram();
+  if (!shaderProgram || !vertexShader || !fragmentShader) {
+    return null;
+  }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
   gl.linkProgram(shaderProgram);
@@ -372,9 +376,11 @@ function initShaderProgram(gl, vsSource, fsSource, releaseBuf) {
 // creates a shader of the given type, uploads the source and
 // compiles it.
 //
-function loadShader(gl, type, source) {
+function loadShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null {
   const shader = gl.createShader(type);
-
+  if (!shader) {
+    return null;
+  }
   // Send the source to the shader object
 
   gl.shaderSource(shader, source);

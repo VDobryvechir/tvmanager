@@ -2,8 +2,8 @@ import { TextureUnit } from "./texture-unit"
 
 export default class WTextureUtils {
 
-   static loadTextures(gl:WebGLRenderingContext, urls:string[], durations: number[]): WebGLTexture[] {
-  	const textures: WebGLTexture[] = [];
+   static loadTextures(gl:WebGLRenderingContext, urls:string[], durations: number[]): TextureUnit[] {
+  	const textures: TextureUnit[] = [];
   	const n = urls.length;
         let videoCount = 0;
   	for(let i=0;i<n;i++) {
@@ -18,8 +18,12 @@ export default class WTextureUtils {
 // Initialize a texture and load an image.
 // When the image finished loading copy it into the texture.
 //
-  static loadTexture(gl:WebGLRenderingContext, url:string, duration: number, videoCount: number): WebGLTexture {
+  static loadTexture(gl:WebGLRenderingContext, url:string, duration: number, videoCount: number): TextureUnit {
   	const texture = gl.createTexture();
+	if (!texture) {
+		console.log("no texture");
+		throw new Error("No texture");
+	}
   	gl.bindTexture(gl.TEXTURE_2D, texture);
 
   // Because images have to be downloaded over the internet
@@ -46,7 +50,7 @@ export default class WTextureUtils {
     		srcType,
     		pixel
   	);
-  	const isVideo = (url) => {
+  	const isVideo = (url: string) => {
      		const pos = url.lastIndexOf(".");
      		if (pos<=0) {
          		return false;
@@ -54,7 +58,7 @@ export default class WTextureUtils {
      		const ext = url.substring(pos+1).toLowerCase();
      		return ext==="mp4" || ext==="webm" || ext==="ogg";
   	};
-  	const isPowerOf2 = (value)=>{
+  	const isPowerOf2 = (value: number)=>{
      		return (value & (value - 1)) === 0;
   	};
   	if (isVideo(url)) {
@@ -64,9 +68,9 @@ export default class WTextureUtils {
   		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
-        	return getVideoTexture(url, texture, videoCount);
+        return WTextureUtils.getVideoTexture(url, texture, videoCount);
   	}
-  	const durationInfo = (nmb) => {
+  	const durationInfo = (nmb: number): string => {
      		if (!(nmb>0)) {
          		return "00:00";
      		}
@@ -75,12 +79,15 @@ export default class WTextureUtils {
      		return (minutes<10 ? "0" : "") + minutes + ":" + (sec<10? "0" : "")+sec;
   	};
   	const dstImage = new Image();
-  	const remakeImage = (img, fn) => {
+  	const remakeImage = (img: HTMLImageElement, fn:()=>void) => {
       		const cnv = document.createElement("canvas");
       		const headerHeight = img.width > 300 && img.height>100 ? 70: 0;
       		cnv.width = img.width + 2;
       		cnv.height = img.height + 2 + headerHeight;
       		const ctx = cnv.getContext("2d");
+			if (!ctx) {
+				return;
+			}
       		ctx.fillStyle = "#000000";
       		ctx.fillRect(0, 0, cnv.width, cnv.height);
       		ctx.drawImage(img, 1, 1 + headerHeight);
@@ -98,9 +105,9 @@ export default class WTextureUtils {
   	}; 
   	const image = new Image();
   	image.onload = () => {
-    		delete image.onload;
+    		image.onload = null;
     		remakeImage(image,()=>{
-      			delete dstImage.onload;
+      			dstImage.onload = null;
     			gl.bindTexture(gl.TEXTURE_2D, texture);
     			gl.texImage2D(
       				gl.TEXTURE_2D,
@@ -129,7 +136,7 @@ export default class WTextureUtils {
   	image.src = url;
   	const imageBlock = {
       		texture: texture,
-      		getTexture: (gl) => {
+      		getTexture: () => {
            		return imageBlock.texture;   
       		},
   	};
@@ -146,9 +153,15 @@ export default class WTextureUtils {
            videoBlock.canvas = canva;
         }
         const ctx = canva.getContext("2d");
+		if (!ctx) {
+			console.log("No context");
+			return;
+		}
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canva.width, canva.height);  
-        ctx.drawImage(videoBlock.video, 1, 1,318,238);
+		if (videoBlock.video) {
+         	ctx.drawImage(videoBlock.video, 1, 1,318,238);
+		}
         const base64URI = canva.toDataURL();
         const dstImage = new Image();    
         dstImage.onload = ()=>{
@@ -159,7 +172,7 @@ export default class WTextureUtils {
   }
 
   static getVideoTexture(url: string, texture: WebGLTexture, videoCount: number): TextureUnit {
-  	const updateTexture = (gl, texture, img, nr) => {
+  	const updateTexture = (gl: WebGLRenderingContext, texture: WebGLTexture, img: HTMLImageElement, nr: number) => {
 		const level = 0;
   		const internalFormat = gl.RGBA;
   		const srcFormat = gl.RGBA;
@@ -181,13 +194,13 @@ export default class WTextureUtils {
      		video: video,
      		copyVideo: false,
      		videoNo: videoCount,
-     		getTexture: (gl) => {
+     		getTexture: () => {
          		return videoBlock.texture;
      		},
-     		prepareTexture: (gl,nr) => {
+     		prepareTexture: (gl: WebGLRenderingContext) => {
       			if (videoBlock.copyVideo) {
                 		WTextureUtils.preupdateVideo(videoBlock);
-                		if (videoBlock.image) {
+                		if (videoBlock.image && videoBlock.videoNo!==undefined) {
       		    			updateTexture(gl, videoBlock.texture, videoBlock.image, videoBlock.videoNo);
                 		}
     			}

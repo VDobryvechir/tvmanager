@@ -1,9 +1,10 @@
 export interface TextureUnit {
 	texture: WebGLTexture;
         videoNo?: number;
-        getTexture: (gl:WebGLRenderingContext) => WebGLTexture;  
+        getTexture: () => WebGLTexture;  
         prepareTexture?: (gl:WebGLRenderingContext) => void;
         canvas?: HTMLCanvasElement;
-        copyVideo: boolean;
-        video: HTMLVideoElement;  
+        copyVideo?: boolean;
+        video?: HTMLVideoElement;
+        image?: HTMLImageElement;  
 }

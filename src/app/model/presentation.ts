@@ -8,7 +8,7 @@ export interface Presentation {
     screen: string[];
     duration: number[];
     version?: string;
-
+    files?: string[];
     // fields to be used only in frontend
     screenIncluded?: Screen[];
     screenExcluded?: Screen[];

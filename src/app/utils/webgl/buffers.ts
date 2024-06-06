@@ -1,4 +1,6 @@
-function initBuffers(gl) {
+import { WBufferBlock } from "./buffer-block";
+
+export function initBuffers(gl: WebGLRenderingContext): WBufferBlock {
   const positionBuffer = initPositionBuffer(gl);
 
   const textureCoordBuffer = [initTextureBuffer(gl,0),initTextureBuffer(gl,1),initTextureBuffer(gl,2),initTextureBuffer(gl,3)];
@@ -7,12 +9,12 @@ function initBuffers(gl) {
 
   return {
     position: positionBuffer,
-    textureCoord: textureCoordBuffer,
+    textureCoord: textureCoordBuffer as WebGLBuffer[],
     indices: indexBuffer,
   };
 }
 
-function initPositionBuffer(gl) {
+function initPositionBuffer(gl: WebGLRenderingContext): WebGLBuffer | null {
   // Create a buffer for the square's positions.
   const positionBuffer = gl.createBuffer();
 
@@ -48,7 +50,7 @@ function initPositionBuffer(gl) {
   return positionBuffer;
 }
 
-function initColorBuffer(gl) {
+function initColorBuffer(gl: WebGLRenderingContext) {
   const faceColors = [
     [1.0, 1.0, 1.0, 1.0], // Front face: white
     [1.0, 0.0, 0.0, 1.0], // Back face: red
@@ -60,7 +62,7 @@ function initColorBuffer(gl) {
 
   // Convert the array of colors into a table for all the vertices.
 
-  var colors = [];
+  var colors: number[] = [];
 
   for (var j = 0; j < faceColors.length; ++j) {
     const c = [0.0,0.0,0.0,0.0] || faceColors[j];
@@ -75,7 +77,7 @@ function initColorBuffer(gl) {
   return colorBuffer;
 }
 
-function initIndexBuffer(gl) {
+function initIndexBuffer(gl: WebGLRenderingContext) {
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
@@ -133,13 +135,13 @@ function initIndexBuffer(gl) {
   return indexBuffer;
 }
 
-function initTextureBuffer(gl, nr) {
+function initTextureBuffer(gl: WebGLRenderingContext, nr: number) {
   const textureCoordBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
   if (!nr) {
      nr=0
   }
-  let textureCoordinates = [];
+  let textureCoordinates: number[] = [];
   switch (nr) {
    case 0:
   textureCoordinates = [
