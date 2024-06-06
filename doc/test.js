@@ -10,3 +10,8 @@ function oppdater() {
     document.body.appendNode(el);
 }
 oppdater();
+http://tks2016004/home
+
+https://go.dev/doc/install
+
+https://github.com/VDobryvechir/tvengine
