@@ -6,15 +6,17 @@
       <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
     </mat-form-field>
   </div>
-  <h3>Tv pcer som inngår i denne gruppen (for å fjerne, klikk bare på dem)</h3>
-  <div class="group-pc-list">
-    @for(pc of pool.tvpcIncluded; track pc.id) {
-      <div class="group-pc-item" (click)="removePc(pc.id)">{{ pc.name }}</div>
-    } @empty {
+  <div class="detail-own">
+    <div class="detail-own__header">Tv pcer som inngår i denne gruppen (for å fjerne, klikk bare på dem)</div>
+    <div class="group-pc-list">
+      @for(pc of pool.tvpcIncluded; track pc.id) {
+      <div class="group-pc-item _selected" (click)="removePc(pc.id)">{{ pc.name }}</div>
+      } @empty {
       Ingen pc i denne gruppen
-    }
+      }
+    </div>
   </div>
-  <h3>Du kan legge til følgende tv pcer ved å klikke på dem</h3>
+  <h3 class="detail-free">Du kan legge til følgende tv pcer ved å klikke på dem</h3>
   <div class="group-pc-list">
     @for(pc of pool.tvpcExcluded; track pc.id) {
       <div class="group-pc-item" (click)="joinPc(pc.id)">{{ pc.name }}</div>

@@ -3,17 +3,45 @@
     margin-top: 20px;
 }
 
-.group-pc-list {
+.detail-own {
+  margin: 20px;
+  padding: 0px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  background-color: silver;
+  color: brown;
+
+  &__header {
+    background-color: #00BFFF;
+    color: white;
+    height: 30px;
     display: flex;
-    flex-wrap: wrap;
-    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 7px 7px 0 0;
+  }
+}
+
+.detail-free {
+    padding: 5px 20px;
+}
+
+.group-pc-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 20px;
 }
 
 .group-pc-item {
     margin: 0 20px 20px 0;
-    background-color: aqua;
+    background-color: saddlebrown;
     color: yellow;
     border-radius: 3px;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
+
+    &._selected {
+        background-color: green;
+        color: white;
+    }
 }

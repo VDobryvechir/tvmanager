@@ -37,4 +37,18 @@ export class AppHomeViewComponent implements OnDestroy {
     });
 
   }
+
+  openPc(): void {
+    let url = this.pool.url;
+    if (!url) {
+      return;
+    }
+    if (url.indexOf("://") < 0) {
+      url = "http://" + url;
+    }
+    const wnd = window.open(url, '_blank');
+    if (wnd) {
+      wnd.focus();
+    }
+  }
 }

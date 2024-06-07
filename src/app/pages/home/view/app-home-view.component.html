@@ -1,10 +1,10 @@
 <div class="task-view">
   <div class="task-view__bar">
     <div class="task-view__bar-info">
-      <div class="task-view__bar-name">
+      <div class="task-view__bar-name"  (click)="openPc()">
         {{ pool.name }}
       </div>
-      <div>
+      <div class="task-view__bar-url" (click)="openPc()">
         {{ pool.url }}
       </div>
       @if (pool.newPresentationId!==pool.oldPresentationId || pool.newPresentationVersion!==pool.oldPresentationVersion || pool.taskStatus!==1000) {
@@ -14,9 +14,11 @@
           <div><span class="task-view-upload-title">Framgang:</span> {{pool.taskStatus * 0.1 }} % </div>
         </div>
       } @else {
-        <div class="task-view-ready">
-          {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})
-        </div>
+        <a routerLink="/presentation/{{ pool.newPresentationId }}">
+          <div class="task-view-ready">
+            {{ pool.newPresentationName }} ({{ pool.newPresentationVersion }})
+          </div>
+        </a>
       }
       @if (pool.connectionStatus===0) {
         <div class="task-view-good">

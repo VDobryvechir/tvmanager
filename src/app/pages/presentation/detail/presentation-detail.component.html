@@ -16,22 +16,22 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <h3>Skjermer som inngår i denne presentasjonen (for å fjerne, klikk bare på dem)</h3>
-  <div class="presentation-pc-list">
-    @for(pc of pool.screenIncluded; track pc.id) {
-      <div class="presentation-pc-item" >
-        <app-screen-view 
-        [pool]="pc"
-        [root]="root"
-        kind="duration"
-        (refresh)="setDurationOrRemove($event)"
-     ></app-screen-view>
+  <div class="detail-own">
+    <div class="detail-own__header">Skjermer som inngår i denne presentasjonen (for å fjerne, klikk bare på dem)</div>
+    <div class="presentation-pc-list">
+      @for(pc of pool.screenIncluded; track pc.id) {
+      <div class="presentation-pc-item">
+        <app-screen-view [pool]="pc"
+                         [root]="root"
+                         kind="duration"
+                         (refresh)="setDurationOrRemove($event)"></app-screen-view>
       </div>
-    } @empty {
+      } @empty {
       Ingen skjerm i denne presentasjonen
-    }
+      }
+    </div>
   </div>
-  <h3>Du kan legge til følgende skjermer ved å klikke på dem</h3>
+  <h3 class="detail-free">Du kan legge til følgende skjermer ved å klikke på dem</h3>
   <div class="presentation-pc-list">
     @for(pc of pool.screenExcluded; track pc.id) {
       <div class="presentation-pc-item" (click)="joinPc(pc.id)">
