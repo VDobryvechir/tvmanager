@@ -3,7 +3,7 @@
         <div class="screen-view__bar">
           <div class="screen-view__bar-name">
             <div>{{ pool.name }}</div>
-            @if (kind === "duration") {
+            @if (kind === "duration" && pool.mode!=="video") {
               <div>
                 <span>Varighet i sekunder</span>
                 <span>
