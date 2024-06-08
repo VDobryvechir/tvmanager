@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class TvpcService {
   url = "/api/v1/tvpc";
-  constructor(private api: ApiService) { }
+  constructor(public api: ApiService) { }
 
   getAll(): Observable<Tvpc[]> {
     return this.api.get(this.url);

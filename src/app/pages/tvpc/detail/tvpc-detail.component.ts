@@ -39,7 +39,21 @@ export class TvpcDetailComponent implements OnInit, OnDestroy{
   }
 
   save(): void {
-    if (!this.pool || !this.pool.name || !this.pool.url) {
+    if (!this.pool) {
+      return;
+    }
+    this.pool.name = (this.pool.name || '').trim();
+    this.pool.url = (this.pool.url || '').trim();
+    if (!this.pool.name) {
+      this.tvpcService.api.showErrorMessage("navn må angis");
+      return;
+    }
+    if (!this.pool.url) {
+      this.tvpcService.api.showErrorMessage("url må angis");
+      return;
+    }
+    if (this.pool.url.includes(' ')) {
+      this.tvpcService.api.showErrorMessage("url kan ikke inneholde romtegn");
       return;
     }
     let body = this.pool;
