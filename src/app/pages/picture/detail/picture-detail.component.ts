@@ -60,7 +60,7 @@ export class PictureDetailComponent implements OnInit, OnDestroy{
      (this.kind === "picture" ? this.pictureService.put(body) : this.videoService.put(body)): 
      (this.kind === "picture" ?this.pictureService.post(body) : this.videoService.post(body));
     this.unsubscribeQuery = api$.subscribe(()=>{
-      this.router.navigate(["/" + this.kind], { relativeTo: this.route });
+      this.router.navigate(["/" + this.kind + "s"], { relativeTo: this.route });
     });
 
   }
@@ -79,7 +79,7 @@ export class PictureDetailComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.kind = window.location.href.includes("/picture/") ? "picture" : "video";
+    this.kind = window.location.href.includes("/pictures/") ? "picture" : "video";
     this.nameTitle = this.kind === "picture" ? "Bildenavn" : "Videonavn";
 
     if (!id) {

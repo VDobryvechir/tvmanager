@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './app.component.less'
 })
 export class AppComponent {
-  pages = ['home', 'presentation', 'screen', 'video', 'picture', 'group', 'tvpc']
+  pages = ['home', 'presentation', 'screens', 'videos', 'pictures', 'group', 'tvpc']
   active = '';
 
   constructor(

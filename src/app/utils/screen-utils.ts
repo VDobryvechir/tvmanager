@@ -42,7 +42,7 @@ export default class ScreenUtils {
         if (!part || !part.message) {
             return "";
         }
-        const pre = `<div style='color:${part.color};font-size:${part.fontSize}px;text-align:center;padding-top:${part.gap}px'>`;
+        const pre = `<div style='color:${part.color};font-size:${part.fontSize}px;text-align:center;padding-top:${part.gap}px;line-height:1'>`;
         const post = `</div>`;
         return pre + part.message + post;
     }

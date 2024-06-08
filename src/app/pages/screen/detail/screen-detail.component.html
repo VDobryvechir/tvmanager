@@ -13,22 +13,21 @@
   </div>
 
   <div class="screen-detail-padding">
-    <mat-form-field appearance="fill">
-      <mat-label>polstring til venstre</mat-label>
-      <input matInput placeholder="0" [(ngModel)]="pool.paddingLeft"  (change)="fullUpdate()">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>polstring på toppen</mat-label>
-      <input matInput placeholder="0" [(ngModel)]="pool.paddingTop"  (change)="fullUpdate()">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>polstring til høyre</mat-label>
-      <input matInput placeholder="0" [(ngModel)]="pool.paddingRight"  (change)="fullUpdate()">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>polstring i bunnen</mat-label>
-      <input matInput placeholder="0" [(ngModel)]="pool.paddingBottom"  (change)="fullUpdate()">
-    </mat-form-field>
+    <div class="screen-detail-padding__header">
+      Polstring
+    </div>
+    <div class="screen-detail-padding__content">
+      <div class="screen-detail-padding__content-title">horisontal</div>
+      <mat-slider min="0" [max]="fullWidth">
+        <input matSliderStartThumb [(ngModel)]="pool.paddingLeft" (change)="fullUpdate()">
+        <input matSliderEndThumb [(ngModel)]="rightPadder" (change)="fullUpdate()">
+      </mat-slider>
+      <div class="screen-detail-padding__content-title">vertikal</div>
+      <mat-slider min="0" [max]="fullHeight">
+        <input matSliderStartThumb [(ngModel)]="pool.paddingTop" (change)="fullUpdate()">
+        <input matSliderEndThumb [(ngModel)]="bottomPadder" (change)="fullUpdate()">
+      </mat-slider>
+    </div>
   </div>
 
 
@@ -51,15 +50,17 @@
                   }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
-              <mat-label>bildehøyde i %</mat-label>
-              <input type="number" matInput placeholder="70" [(ngModel)]="pool.pictureHeight"  (change)="fullUpdate()" />
-            </mat-form-field>
+            <div>
+              <div class="screen-detail-label-over-slider">bildehøyde</div>
+              <mat-slider min="1" max="100" step="0.5" class="picture-slider">
+                <input matSliderThumb [(ngModel)]="pool.pictureHeight"  (change)="fullUpdate()">
+              </mat-slider>
+            </div>
           </div>  
           <div class="screen-detail-container">
             @for(item of pool.text; track item) {
               <div class="screen-detail-input">
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" class="big-input">
                   <mat-label>Tekst</mat-label>
                   <input matInput placeholder="" [(ngModel)]="item.message"  (change)="fullUpdate()" />
                 </mat-form-field>
@@ -67,14 +68,16 @@
                    <span class="screen-detail-line-text">tekstfarge</span>
                    <p-colorPicker [(ngModel)]="item.color" (ngModelChange)="modelChange($event)" />
                 </span>
-                <mat-form-field appearance="fill">
-                  <mat-label>skriftstørrelse i px</mat-label>
-                  <input type="number" matInput placeholder="70" [(ngModel)]="item.fontSize"   (change)="fullUpdate()" />
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>gap på toppen i px</mat-label>
-                  <input type="number" matInput placeholder="70" [(ngModel)]="item.gap"  (change)="fullUpdate()" />
-                </mat-form-field>
+                <div>
+                  <div class="screen-detail-label-over-slider">gap på toppen</div>
+                  <mat-slider min="0" max="1000" step="1" class="item-slider">
+                    <input matSliderThumb [(ngModel)]="item.gap"  (change)="fullUpdate()">
+                  </mat-slider>
+                  <div class="screen-detail-label-over-slider">skriftstørrelse</div>
+                  <mat-slider min="8" max="200" step="1" class="item-slider">
+                    <input matSliderThumb [(ngModel)]="item.fontSize"  (change)="fullUpdate()">
+                  </mat-slider>
+                </div>
               </div>
             }
           </div>
@@ -111,18 +114,24 @@
     </mat-tab>
 
 </mat-tab-group>
-<save-footer cancelRoute="/screen" (save)="save()"></save-footer>
+<save-footer cancelRoute="/screens" (save)="save()"></save-footer>
 </div>
 @if (pool.file) {
   <div class="screen-detail-preview">
     <div class="screen-detail-preview__message">Forhåndsvisning</div>
+    <div class="screen-detail-preview__image">
     @if (pool.mode === "video") {
       <video width="320" height="240" controls>
         <source src="{{ root }}{{pool.file}}" />
       </video>
+    } @else if (pool.file.length > 10) {
+      <img src="{{ pool.file }}" width="320" height="240" />
+    } @else if (originalFileName){
+        <img src="{{ root }}{{ originalFileName }}" width="320" height="240" />
     } @else {
-      <img src="{{ pool.file }}" width="320" />
+        <div class="preview-size" [style.backgroundColor]="pool.backgroundColor"></div>
     }
+  </div>
   </div>
   }
 </div>

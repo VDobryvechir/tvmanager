@@ -16,8 +16,8 @@
       Framgang:
       @if (!response) {
       <div class="presentation-activate__state _activating">Aktiveres nå</div>
-      } @else if (response.error) {
-      <div class="presentation-activate__state _fail">{{ response.error }}</div>
+      } @else if (response.presentation?.error) {
+      <div class="presentation-activate__state _fail">{{ response.presentation.error }}</div>
       } @else if (response.tv?.length===1) {
       <div class="presentation-activate__state _success"> Ferdig (1 pc) </div>
       } @else if (response.tv?.length) {

@@ -9,7 +9,7 @@
   <div>
     <app-file-uploader (update)="updateFile($event)" [kind]="kind" [message]="pool.file || ''"></app-file-uploader>
   </div>
-  <save-footer [cancelRoute]="'/' + kind" (save)="save()"></save-footer> 
+  <save-footer [cancelRoute]="'/' + kind+'s'" (save)="save()"></save-footer> 
 } @else {
   <app-loader message="Side lasting"></app-loader>
 }

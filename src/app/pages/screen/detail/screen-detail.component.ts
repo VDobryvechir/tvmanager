@@ -4,6 +4,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSliderModule} from '@angular/material/slider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Media } from '../../../model/media';
 import { Screen } from '../../../model/screen';
@@ -24,6 +25,7 @@ import { BehaviorSubject, debounceTime } from 'rxjs';
     MatTabsModule,
     MatListModule,
     MatButtonModule,
+    MatSliderModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -39,7 +41,8 @@ import { BehaviorSubject, debounceTime } from 'rxjs';
 export class ScreenDetailComponent implements OnInit {
   
   pool: Screen | undefined;
-
+  fullWidth = 1600;
+  fullHeight = 900;
   videoPool: Media[] = [];
   picturePool: Media[] = [];
   root: string;
@@ -49,6 +52,9 @@ export class ScreenDetailComponent implements OnInit {
   modeIndex = 0;
   fullUpdateReady = false;
   debouncedUpdate$ = new BehaviorSubject(null);
+  rightPadder = this.fullWidth;
+  bottomPadder = this.fullHeight;
+  originalFileName = '';
 
   constructor(private screenService: ScreenService,
     private route: ActivatedRoute,
@@ -66,6 +72,17 @@ export class ScreenDetailComponent implements OnInit {
     const api$ = id === 'new' ? this.screenService.getNew(): this.screenService.getSingle(id);
     api$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((info)=>{
       this.pool = info.pool;
+      if (!this.pool.paddingRight) {
+        this.pool.paddingRight = 0;
+      }
+      this.rightPadder = this.fullWidth - this.pool.paddingRight;
+      if (!this.pool.paddingBottom) {
+        this.pool.paddingBottom = 0;
+      }
+      this.bottomPadder = this.fullHeight - this.pool.paddingBottom;
+      if (this.pool.file) {
+        this.originalFileName = this.pool.file;
+      }
       this.picturePool = info.picture;
       this.videoPool = info.video;
       this.modeIndex = ScreenUtils.getModeIndex(info.pool.mode);
@@ -121,6 +138,8 @@ export class ScreenDetailComponent implements OnInit {
     if (!this.pool || !this.fullUpdateReady) {
       return;
     }
+    this.pool.paddingBottom = this.fullHeight - this.bottomPadder;
+    this.pool.paddingRight = this.fullWidth - this.rightPadder;
     window.console.log("full update", this.pool);
     ScreenUtils.recalculateHtml(this.pool);
     await ScreenUtils.recalculateFile(this.pool);
@@ -135,9 +154,12 @@ export class ScreenDetailComponent implements OnInit {
       return;
     }
     let body = this.pool;
+    if (body.file && body.file.length<10 && body.file.startsWith("data")) {
+      body.file = this.originalFileName;
+    }
     const api$ = this.pool.id ? this.screenService.put(body) : this.screenService.post(body);
     api$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(()=>{
-      this.router.navigate(["/screen"], { relativeTo: this.route });
+      this.router.navigate(["/screens"], { relativeTo: this.route });
     });
   }
 

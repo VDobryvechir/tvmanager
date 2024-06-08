@@ -1,7 +1,7 @@
 @if (!pool) {
     <app-loader message="Skjerm side lasting"></app-loader>
 } @else {
-    <app-add-button message="Lag en ny skjerm" routing="/screen/new"></app-add-button>
+    <app-add-button message="Lag en ny skjerm" routing="/screens/new"></app-add-button>
     <div class="app-screen-table">
         @for (item of pool; track item.id) {
             <app-screen-view 

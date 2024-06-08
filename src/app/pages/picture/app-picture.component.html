@@ -1,7 +1,7 @@
 @if (!pool) {
     <app-loader [message]="loaderMessage"></app-loader>
 } @else {
-  <app-add-button [message]="creationMessage" [routing]="'/' + kind + '/new'"></app-add-button>
+  <app-add-button [message]="creationMessage" [routing]="'/' + kind + 's/new'"></app-add-button>
   <div class="app-picture-table">
     @for (item of pool; track item.id) {
       <picture-view [pool]="item" (refresh)="refresh()" [kind]="kind" [root]="root"></picture-view> 
